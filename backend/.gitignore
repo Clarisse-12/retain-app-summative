@@ -1,9 +1,11 @@
-node_modules
-# Keep environment variables out of version control
 .env
+node_modules/
+src/generated/
+*.log
+npm-debug.log*
+coverage/
+dist/
 
-/generated/prisma
 .agents/
 .claude/
 .windsurf/
-/src/generated/prisma
