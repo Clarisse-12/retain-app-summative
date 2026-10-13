@@ -1,15 +1,17 @@
 {
-  "name": "backend",
+  "name": "retain-backend",
   "version": "1.0.0",
-  "main": "index.js",
+  "description": "Retain — Personal Expense & Budget Manager API",
+  "main": "src/app.js",
   "scripts": {
-    "build": "nodemon src/app.js",
-    "start": "node src/app.js"
+    "dev": "nodemon src/app.js",
+    "start": "node src/app.js",
+    "prisma:generate": "prisma generate",
+    "prisma:migrate": "prisma migrate dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": "",
   "dependencies": {
     "@prisma/client": "^7.10.0",
     "bcryptjs": "^3.0.3",
