@@ -7,7 +7,22 @@ const now = new Date();
 // Wider year range: 3 years back, 5 years forward
 const YEARS = Array.from({ length: 9 }, (_, i) => now.getFullYear() - 3 + i);
 
-function budgetStatus(pct: number) {
+type MonthContext = "past" | "current" | "future";
+
+function getMonthContext(month: number, year: number): MonthContext {
+  const nowYear = now.getFullYear();
+  const nowMonth = now.getMonth() + 1;
+  if (year < nowYear || (year === nowYear && month < nowMonth)) return "past";
+  if (year === nowYear && month === nowMonth) return "current";
+  return "future";
+}
+
+function budgetStatus(pct: number, ctx: MonthContext) {
+  // Past month with no/low spending recorded → treat as over budget (missed tracking)
+  if (ctx === "past" && pct < 100) return { label: "Over budget", color: "var(--color-danger)" };
+  // Future month → always approaching (planned but not yet spent)
+  if (ctx === "future") return { label: "Approaching", color: "#f59e0b" };
+  // Current month → use actual percentage
   if (pct >= 100) return { label: "Over budget", color: "var(--color-danger)" };
   if (pct >= 80)  return { label: "Approaching", color: "#f59e0b" };
   return { label: "Within budget", color: "var(--color-accent)" };
@@ -77,7 +92,7 @@ export default function BudgetsPage() {
 
   const monthName = new Date(year, month - 1).toLocaleString("default", { month: "long" });
   const totalBudgeted = summary.reduce((s, b) => s + parseFloat(b.amount), 0);
-
+  const ctx = getMonthContext(month, year);
   const years = YEARS;
 
   return (
@@ -88,7 +103,7 @@ export default function BudgetsPage() {
       </div>
 
       {/* Month/year picker */}
-      <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", alignItems: "center" }}>
+      <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
         <select className="form-input" style={{ width: 140 }} value={month} onChange={(e) => setMonth(Number(e.target.value))}>
           {Array.from({ length: 12 }, (_, i) => (
             <option key={i + 1} value={i + 1}>
@@ -99,6 +114,13 @@ export default function BudgetsPage() {
         <select className="form-input" style={{ width: 100 }} value={year} onChange={(e) => setYear(Number(e.target.value))}>
           {years.map((y) => <option key={y} value={y}>{y}</option>)}
         </select>
+        <span style={{
+          fontSize: "0.8rem", fontWeight: 600, padding: "0.25rem 0.6rem", borderRadius: 4,
+          background: ctx === "past" ? "var(--color-danger)" : ctx === "future" ? "#f59e0b" : "var(--color-accent)",
+          color: "#fff",
+        }}>
+          {ctx === "past" ? "Past" : ctx === "future" ? "Future" : "Current month"}
+        </span>
       </div>
 
       {/* Summary cards */}
@@ -118,7 +140,7 @@ export default function BudgetsPage() {
           </div>
         </div>
         {totalBudgeted > 0 && (() => {
-          const s = budgetStatus(totalBudgeted > 0 ? (totalSpent / totalBudgeted) * 100 : 0);
+          const s = budgetStatus(totalBudgeted > 0 ? (totalSpent / totalBudgeted) * 100 : 0, ctx);
           return (
             <div className="card" style={{ textAlign: "center" }}>
               <div style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", marginBottom: "0.4rem" }}>Overall status</div>
@@ -183,7 +205,7 @@ export default function BudgetsPage() {
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
           {summary.map((b) => {
-            const s = budgetStatus(b.percentUsed);
+            const s = budgetStatus(b.percentUsed, ctx);
             return (
             <div key={b.id} className="card">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.75rem" }}>
