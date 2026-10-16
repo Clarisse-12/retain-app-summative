@@ -31,7 +31,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           { to: "/dashboard", label: "Dashboard" },
           { to: "/expenses", label: "Expenses" },
           { to: "/budgets", label: "Budgets" },
-          ...(isAdmin ? [{ to: "/admin", label: "Admin" }, { to: "/categories", label: "Categories" }] : []),
+          ...(isAdmin ? [{ to: "/admin", label: "Admin" }] : []),
         ].map(({ to, label }) => (
           <NavLink
             key={to}

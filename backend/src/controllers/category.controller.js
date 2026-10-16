@@ -45,34 +45,21 @@ const createCategory = async (req, res) => {
  */
 const updateCategory = async (req, res) => {
   const { id } = req.params;
-  const userId = req.user.id;
   const { name } = req.body;
 
   const category = await prisma.category.findUnique({ where: { id } });
-
-  if (!category || category.userId !== userId) {
-    return res.status(404).json({ message: "Category not found" });
-  }
+  if (!category) return res.status(404).json({ message: "Category not found" });
 
   if (name && name.toLowerCase() !== category.name.toLowerCase()) {
     const duplicate = await prisma.category.findFirst({
-      where: {
-        userId,
-        name: { equals: name, mode: "insensitive" },
-        NOT: { id },
-      },
+      where: { name: { equals: name, mode: "insensitive" }, NOT: { id } },
     });
-
-    if (duplicate) {
-      return res.status(409).json({ message: "You already have a category with that name" });
-    }
+    if (duplicate) return res.status(409).json({ message: "A category with that name already exists" });
   }
 
   const updated = await prisma.category.update({
     where: { id },
-    data: {
-      ...(name !== undefined && { name }),
-    },
+    data: { ...(name !== undefined && { name }) },
   });
 
   res.json({ category: updated });
@@ -85,13 +72,9 @@ const updateCategory = async (req, res) => {
  */
 const deleteCategory = async (req, res) => {
   const { id } = req.params;
-  const userId = req.user.id;
 
   const category = await prisma.category.findUnique({ where: { id } });
-
-  if (!category || category.userId !== userId) {
-    return res.status(404).json({ message: "Category not found" });
-  }
+  if (!category) return res.status(404).json({ message: "Category not found" });
 
   await prisma.category.delete({ where: { id } });
 

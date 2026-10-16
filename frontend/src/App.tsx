@@ -6,7 +6,6 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import ExpensesPage from "./pages/ExpensesPage";
 import BudgetsPage from "./pages/BudgetsPage";
-import CategoriesPage from "./pages/CategoriesPage";
 import AdminPage from "./pages/AdminPage";
 import LandingPage from "./pages/LandingPage";
 
@@ -39,13 +38,14 @@ export default function App() {
         </Route>
 
         <Route element={<RequireAuth />}>
+          {/* Normal user routes */}
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/expenses" element={<ExpensesPage />} />
           <Route path="/budgets" element={<BudgetsPage />} />
 
+          {/* Admin-only routes */}
           <Route element={<RequireAdmin />}>
             <Route path="/admin" element={<AdminPage />} />
-            <Route path="/categories" element={<CategoriesPage />} />
           </Route>
         </Route>
 

@@ -50,8 +50,13 @@ export default function AdminPage() {
 
   const handleCatDelete = async (id: string) => {
     if (!confirm("Delete this category? Affected expenses will become uncategorised.")) return;
-    await categoryApi.delete(id);
-    setCategories((prev) => prev.filter((c) => c.id !== id));
+    try {
+      await categoryApi.delete(id);
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+    } catch (err) {
+      const e = err as { response?: { data?: { message?: string } } };
+      setCatError(e.response?.data?.message ?? "Failed to delete category");
+    }
   };
 
   if (loading) return <Layout><div className="spinner" /></Layout>;
