@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
-import type { ExpenseFilters } from "../../types";
+import type { ExpenseFilters } from "../types";
 
 const initialState: ExpenseFilters = {
   categoryId: undefined,

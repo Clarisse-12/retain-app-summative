@@ -170,10 +170,10 @@ export interface AdminInsightsResponse {
 
 // ── Expense filter (Redux state shape) ───────────────────────
 export interface ExpenseFilters {
-  search: string;
-  categoryId: string;
-  dateFrom: string;
-  dateTo: string;
+  search?: string;
+  categoryId?: string;
+  dateFrom?: string;
+  dateTo?: string;
   sortBy: 'date' | 'amount' | 'title';
   order: 'asc' | 'desc';
   page: number;
@@ -182,6 +182,10 @@ export interface ExpenseFilters {
 
 // ── Generic API error ────────────────────────────────────────
 export interface ApiError {
-  message: string;
-  errors?: { field: string; message: string }[];
+  response?: {
+    data?: {
+      message?: string;
+      errors?: { field: string; message: string }[];
+    };
+  };
 }

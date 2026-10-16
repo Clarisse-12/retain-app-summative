@@ -22,14 +22,14 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     const token = localStorage.getItem("token");
     if (!token) { setLoading(false); return; }
     authApi.me()
-      .then((res) => setUser(res.data.user))
+      .then((res) => setUser(res.user))
       .catch(() => localStorage.removeItem("token"))
       .finally(() => setLoading(false));
   }, []);
 
-  const handleAuth = (res: { data: AuthResponse }) => {
-    localStorage.setItem("token", res.data.token);
-    setUser(res.data.user);
+  const handleAuth = (res: AuthResponse) => {
+    localStorage.setItem("token", res.token);
+    setUser(res.user);
   };
 
   const login = async (email: string, password: string) => {
