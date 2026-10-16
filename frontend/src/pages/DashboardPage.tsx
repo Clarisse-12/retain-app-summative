@@ -100,7 +100,7 @@ export default function DashboardPage() {
                     <td>{e.title}</td>
                     <td>
                       {e.category ? (
-                        <span className="badge" style={{ background: e.category.color || "var(--color-primary)" }}>
+                        <span className="badge">
                           {e.category.name}
                         </span>
                       ) : "—"}

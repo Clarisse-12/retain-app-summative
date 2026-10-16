@@ -23,7 +23,6 @@ export interface AdminUser extends User {
 export interface Category {
   id: string;
   name: string;
-  color: string;   // hex e.g. "#f97316" — may be empty string for default categories
   userId: string;
   createdAt: string;
   updatedAt: string;
@@ -33,7 +32,6 @@ export interface Category {
 export interface CategoryRef {
   id: string;
   name: string;
-  color: string;
 }
 
 // ── Expense ──────────────────────────────────────────────────

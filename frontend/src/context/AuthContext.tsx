@@ -9,6 +9,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<void>;
   register: (name: string, email: string, password: string) => Promise<void>;
   logout: () => void;
+  mockLogin: () => void;
   isAdmin: boolean;
 }
 
@@ -40,13 +41,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     handleAuth(await authApi.register({ name, email, password }));
   };
 
+  const mockLogin = () => {
+    setUser({ id: "mock", name: "Demo User", email: "demo@retain.app", role: "USER", createdAt: new Date().toISOString() });
+  };
+
   const logout = () => {
     localStorage.removeItem("token");
     setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, register, logout, isAdmin: user?.role === "ADMIN" }}>
+    <AuthContext.Provider value={{ user, loading, login, register, logout, mockLogin, isAdmin: user?.role === "ADMIN" }}>
       {children}
     </AuthContext.Provider>
   );

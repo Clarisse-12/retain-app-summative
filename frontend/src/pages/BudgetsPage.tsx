@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Layout from "../components/Layout";
 import { budgetApi, categoryApi } from "../services/api";
-import type { BudgetSummaryItem, Category, CreateBudgetInput, ApiError } from "../types";
+import type { BudgetSummaryItem, Category, CreateBudgetInput } from "../types";
 
 const now = new Date();
 
@@ -54,7 +54,7 @@ export default function BudgetsPage() {
       load();
       closeForm();
     } catch (err) {
-      const e = err as { response?: { data?: ApiError } };
+      const e = err as { response?: { data?: { message?: string } } };
       setFormError(e.response?.data?.message ?? "Failed to save budget");
     } finally {
       setSaving(false);
@@ -170,9 +170,7 @@ export default function BudgetsPage() {
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.75rem" }}>
                 <div>
                   <div style={{ fontWeight: 600, color: "var(--color-primary)" }}>
-                    {b.category
-                      ? <span><span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: b.category.color || "var(--color-primary)", marginRight: 6 }} />{b.category.name}</span>
-                      : "Overall"}
+                    {b.category ? <span>{b.category.name}</span> : "Overall"}
                   </div>
                   <div style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", marginTop: "0.2rem" }}>
                     ${b.spent.toFixed(2)} spent of ${parseFloat(b.amount).toFixed(2)}

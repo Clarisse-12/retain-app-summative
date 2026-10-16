@@ -15,7 +15,7 @@ const getDashboard = async (req, res) => {
         orderBy: { createdAt: "desc" },
         include: {
           user: { select: { id: true, name: true, email: true } },
-          category: { select: { id: true, name: true, color: true } },
+          category: { select: { id: true, name: true } },
         },
       }),
     ]);
@@ -87,7 +87,7 @@ const getExpenseInsights = async (req, res) => {
 
   const categories = await prisma.category.findMany({
     where: { id: { in: categoryIds } },
-    select: { id: true, name: true, color: true },
+    select: { id: true, name: true },
   });
 
   const categoryMap = Object.fromEntries(categories.map((c) => [c.id, c]));

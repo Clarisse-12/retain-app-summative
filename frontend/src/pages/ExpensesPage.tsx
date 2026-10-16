@@ -3,7 +3,7 @@ import Layout from "../components/Layout";
 import { expenseApi, categoryApi } from "../services/api";
 import { useAppDispatch, useAppSelector } from "../store";
 import { setFilters, setPage, resetFilters } from "../store/filtersSlice";
-import type { Expense, Category, CreateExpenseInput, ApiError } from "../types";
+import type { Expense, Category, CreateExpenseInput } from "../types";
 
 const EMPTY_FORM: CreateExpenseInput = { title: "", amount: 0, description: "", categoryId: null };
 
@@ -64,7 +64,7 @@ export default function ExpensesPage() {
       load();
       closeForm();
     } catch (err) {
-      const e = err as { response?: { data?: ApiError } };
+      const e = err as { response?: { data?: { message?: string } } };
       setFormError(e.response?.data?.message ?? "Failed to save expense");
     } finally {
       setSaving(false);
@@ -185,7 +185,7 @@ export default function ExpensesPage() {
                     </td>
                     <td>
                       {e.category
-                        ? <span className="badge" style={{ background: e.category.color || "var(--color-primary)" }}>{e.category.name}</span>
+                        ? <span className="badge">{e.category.name}</span>
                         : "—"}
                     </td>
                     <td>{new Date(e.date).toLocaleDateString()}</td>

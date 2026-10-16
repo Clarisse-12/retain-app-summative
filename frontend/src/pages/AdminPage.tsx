@@ -64,7 +64,7 @@ export default function AdminPage() {
                   <td style={{ fontSize: "0.85rem", color: "var(--color-text-muted)" }}>{e.userId}</td>
                   <td>
                     {e.category
-                      ? <span className="badge" style={{ background: e.category.color || "var(--color-primary)" }}>{e.category.name}</span>
+                      ? <span className="badge">{e.category.name}</span>
                       : "—"}
                   </td>
                   <td>{new Date(e.date).toLocaleDateString()}</td>
@@ -131,7 +131,7 @@ export default function AdminPage() {
                   <tr key={i}>
                     <td>
                       {s.category
-                        ? <span><span style={{ display: "inline-block", width: 10, height: 10, borderRadius: "50%", background: s.category.color || "var(--color-primary)", marginRight: 6 }} />{s.category.name}</span>
+                        ? <span>{s.category.name}</span>
                         : <span style={{ color: "var(--color-text-muted)" }}>Uncategorised</span>}
                     </td>
                     <td style={{ textAlign: "right" }}>{s.expenseCount}</td>

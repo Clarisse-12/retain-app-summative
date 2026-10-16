@@ -50,7 +50,7 @@ const getExpenses = async (req, res) => {
   const [expenses, total] = await prisma.$transaction([
     prisma.expense.findMany({
       where,
-      include: { category: { select: { id: true, name: true, color: true } } },
+      include: { category: { select: { id: true, name: true } } },
       orderBy: { [sortField]: sortOrder },
       skip,
       take: pageSize,
@@ -76,7 +76,7 @@ const getExpenses = async (req, res) => {
 const getExpense = async (req, res) => {
   const expense = await prisma.expense.findUnique({
     where: { id: req.params.id },
-    include: { category: { select: { id: true, name: true, color: true } } },
+    include: { category: { select: { id: true, name: true } } },
   });
 
   if (!expense || expense.userId !== req.user.id) {
@@ -110,7 +110,7 @@ const createExpense = async (req, res) => {
       userId,
       categoryId: categoryId ?? null,
     },
-    include: { category: { select: { id: true, name: true, color: true } } },
+    include: { category: { select: { id: true, name: true } } },
   });
 
   res.status(201).json({ expense });
@@ -147,7 +147,7 @@ const updateExpense = async (req, res) => {
       ...(date !== undefined && { date: new Date(date) }),
       ...("categoryId" in req.body && { categoryId: categoryId ?? null }),
     },
-    include: { category: { select: { id: true, name: true, color: true } } },
+    include: { category: { select: { id: true, name: true } } },
   });
 
   res.json({ expense: updated });

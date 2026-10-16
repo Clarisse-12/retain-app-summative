@@ -16,7 +16,7 @@ const getBudgets = async (req, res) => {
 
   const budgets = await prisma.budget.findMany({
     where,
-    include: { category: { select: { id: true, name: true, color: true } } },
+    include: { category: { select: { id: true, name: true } } },
     orderBy: [{ year: "desc" }, { month: "desc" }],
   });
 
@@ -61,7 +61,7 @@ const createBudget = async (req, res) => {
       userId,
       categoryId: categoryId ?? null,
     },
-    include: { category: { select: { id: true, name: true, color: true } } },
+    include: { category: { select: { id: true, name: true } } },
   });
 
   res.status(201).json({ budget });
@@ -97,7 +97,7 @@ const updateBudget = async (req, res) => {
       ...(year !== undefined && { year }),
       ...("categoryId" in req.body && { categoryId: categoryId ?? null }),
     },
-    include: { category: { select: { id: true, name: true, color: true } } },
+    include: { category: { select: { id: true, name: true } } },
   });
 
   res.json({ budget: updated });
@@ -149,7 +149,7 @@ const getBudgetSummary = async (req, res) => {
   const [budgets, expenses] = await prisma.$transaction([
     prisma.budget.findMany({
       where: { userId, month: monthNum, year: yearNum },
-      include: { category: { select: { id: true, name: true, color: true } } },
+      include: { category: { select: { id: true, name: true } } },
     }),
     prisma.expense.findMany({
       where: {

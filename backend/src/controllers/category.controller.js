@@ -19,7 +19,7 @@ const getCategories = async (req, res) => {
  * Prevents case-insensitive duplicate names.
  */
 const createCategory = async (req, res) => {
-  const { name, color } = req.body;
+  const { name } = req.body;
   const userId = req.user.id;
 
   const duplicate = await prisma.category.findFirst({
@@ -34,7 +34,7 @@ const createCategory = async (req, res) => {
   }
 
   const category = await prisma.category.create({
-    data: { name, color, userId },
+    data: { name, userId },
   });
 
   res.status(201).json({ category });
@@ -47,7 +47,7 @@ const createCategory = async (req, res) => {
 const updateCategory = async (req, res) => {
   const { id } = req.params;
   const userId = req.user.id;
-  const { name, color } = req.body;
+  const { name } = req.body;
 
   const category = await prisma.category.findUnique({ where: { id } });
 
@@ -73,7 +73,6 @@ const updateCategory = async (req, res) => {
     where: { id },
     data: {
       ...(name !== undefined && { name }),
-      ...(color !== undefined && { color }),
     },
   });
 
