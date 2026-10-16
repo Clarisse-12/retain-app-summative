@@ -1,5 +1,6 @@
 // ── User ────────────────────────────────────────────────────
 export type UserRole = 'USER' | 'ADMIN';
+export type PaymentMethod = 'CASH' | 'CARD' | 'BANK_TRANSFER' | 'MOBILE_PAYMENT' | 'OTHER';
 
 export interface User {
   id: string;
@@ -39,8 +40,9 @@ export interface Expense {
   id: string;
   title: string;
   description: string | null;
-  amount: string;        // Prisma Decimal comes back as a string — use parseFloat()
-  date: string;          // ISO datetime string
+  amount: string;
+  date: string;
+  paymentMethod: PaymentMethod;
   userId: string;
   categoryId: string | null;
   category: CategoryRef | null;
@@ -51,9 +53,10 @@ export interface Expense {
 export interface CreateExpenseInput {
   title: string;
   description?: string;
-  amount: number;        // backend expects a number
-  date?: string;         // ISO 8601 datetime string
+  amount: number;
+  date?: string;
   categoryId?: string | null;
+  paymentMethod?: PaymentMethod;
 }
 
 export interface UpdateExpenseInput extends Partial<CreateExpenseInput> {}

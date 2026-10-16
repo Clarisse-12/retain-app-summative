@@ -91,7 +91,7 @@ const getExpense = async (req, res) => {
  * Creates a new expense for the authenticated user.
  */
 const createExpense = async (req, res) => {
-  const { title, description, amount, date, categoryId } = req.body;
+  const { title, description, amount, date, categoryId, paymentMethod } = req.body;
   const userId = req.user.id;
 
   if (categoryId) {
@@ -107,6 +107,7 @@ const createExpense = async (req, res) => {
       description,
       amount,
       date: date ? new Date(date) : undefined,
+      paymentMethod,
       userId,
       categoryId: categoryId ?? null,
     },
@@ -123,7 +124,7 @@ const createExpense = async (req, res) => {
 const updateExpense = async (req, res) => {
   const { id } = req.params;
   const userId = req.user.id;
-  const { title, description, amount, date, categoryId } = req.body;
+  const { title, description, amount, date, categoryId, paymentMethod } = req.body;
 
   const expense = await prisma.expense.findUnique({ where: { id } });
 
@@ -145,6 +146,7 @@ const updateExpense = async (req, res) => {
       ...(description !== undefined && { description }),
       ...(amount !== undefined && { amount }),
       ...(date !== undefined && { date: new Date(date) }),
+      ...(paymentMethod !== undefined && { paymentMethod }),
       ...("categoryId" in req.body && { categoryId: categoryId ?? null }),
     },
     include: { category: { select: { id: true, name: true } } },

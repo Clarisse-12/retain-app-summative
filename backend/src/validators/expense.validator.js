@@ -24,6 +24,11 @@ const expenseSchema = z.object({
     .cuid("Invalid category ID")
     .nullable()
     .optional(),
+  paymentMethod: z
+    .enum(["CASH", "CARD", "BANK_TRANSFER", "MOBILE_PAYMENT", "OTHER"], {
+      errorMap: () => ({ message: "Invalid payment method" }),
+    })
+    .optional(),
 });
 
 const updateExpenseSchema = expenseSchema.partial();
