@@ -141,11 +141,21 @@ export interface AdminStats {
   totalUsers: number;
   totalExpenses: number;
   totalExpenseValue: number;
+  expensesThisMonth: number;
+}
+
+export interface RecentUser {
+  id: string;
+  name: string;
+  email: string;
+  role: UserRole;
+  createdAt: string;
 }
 
 export interface AdminDashboardResponse {
   stats: AdminStats;
   recentExpenses: Expense[];
+  recentUsers: RecentUser[];
 }
 
 export interface AdminUsersResponse {
@@ -166,6 +176,8 @@ export interface SpendingByMonth {
 
 export interface AdminInsightsResponse {
   spendingByCategory: SpendingByCategory[];
+  top5: SpendingByCategory[];
+  bottom5: SpendingByCategory[];
   spendingByMonth: SpendingByMonth[];
 }
 
