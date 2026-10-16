@@ -1,13 +1,10 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
-  provider = "prisma-client"
-  output   = "../src/generated/prisma"
+  provider = "prisma-client-js"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL")
 }
 
 enum UserRole {
@@ -16,16 +13,16 @@ enum UserRole {
 }
 
 model User {
-  id        String     @id @default(cuid())
-  name      String
-  email     String     @unique
-  password  String
-  role      UserRole   @default(USER)
-  expenses  Expense[]
-  budgets   Budget[]
+  id         String     @id @default(cuid())
+  name       String
+  email      String     @unique
+  password   String
+  role       UserRole   @default(USER)
+  expenses   Expense[]
+  budgets    Budget[]
   categories Category[]
-  createdAt DateTime   @default(now())
-  updatedAt DateTime   @updatedAt
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
 }
 
 model Category {
