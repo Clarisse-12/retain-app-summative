@@ -173,6 +173,7 @@ export interface AdminInsightsResponse {
 export interface ExpenseFilters {
   search?: string;
   categoryId?: string;
+  paymentMethod?: string;
   dateFrom?: string;
   dateTo?: string;
   sortBy: 'date' | 'amount' | 'title';

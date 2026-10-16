@@ -17,6 +17,7 @@ const getExpenses = async (req, res) => {
     dateFrom,
     dateTo,
     search,
+    paymentMethod,
     sortBy = "date",
     order = "desc",
     page = "1",
@@ -33,6 +34,8 @@ const getExpenses = async (req, res) => {
   const where = { userId };
 
   if (categoryId) where.categoryId = categoryId;
+
+  if (paymentMethod) where.paymentMethod = paymentMethod;
 
   if (dateFrom || dateTo) {
     where.date = {};

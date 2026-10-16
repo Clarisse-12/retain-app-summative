@@ -3,9 +3,17 @@ import Layout from "../components/Layout";
 import { expenseApi, categoryApi } from "../services/api";
 import { useAppDispatch, useAppSelector } from "../store";
 import { setFilters, setPage, resetFilters } from "../store/filtersSlice";
-import type { Expense, Category, CreateExpenseInput } from "../types";
+import type { Expense, Category, CreateExpenseInput, PaymentMethod } from "../types";
 
-const EMPTY_FORM: CreateExpenseInput = { title: "", amount: 0, description: "", categoryId: null };
+const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
+  { value: "CASH", label: "Cash" },
+  { value: "CARD", label: "Card" },
+  { value: "BANK_TRANSFER", label: "Bank Transfer" },
+  { value: "MOBILE_PAYMENT", label: "Mobile Payment" },
+  { value: "OTHER", label: "Other" },
+];
+
+const EMPTY_FORM: CreateExpenseInput = { title: "", amount: 0, description: "", categoryId: null, paymentMethod: "CARD" };
 
 export default function ExpensesPage() {
   const dispatch = useAppDispatch();
@@ -33,7 +41,7 @@ export default function ExpensesPage() {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ ...EMPTY_FORM, date: new Date().toISOString().slice(0, 10) });
+    setForm({ ...EMPTY_FORM, date: new Date().toISOString().slice(0, 10), paymentMethod: "CARD" });
     setFormError("");
     setShowForm(true);
   };
@@ -46,6 +54,7 @@ export default function ExpensesPage() {
       amount: parseFloat(e.amount),
       date: e.date.slice(0, 10),
       categoryId: e.categoryId,
+      paymentMethod: e.paymentMethod,
     });
     setFormError("");
     setShowForm(true);
@@ -106,6 +115,14 @@ export default function ExpensesPage() {
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
+        <div className="form-group" style={{ margin: 0, flex: "1 1 140px" }}>
+          <label>Payment</label>
+          <select className="form-input" value={filters.paymentMethod ?? ""}
+            onChange={(e) => dispatch(setFilters({ paymentMethod: e.target.value || undefined }))}>
+            <option value="">All</option>
+            {PAYMENT_METHODS.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
+          </select>
+        </div>
         <div className="form-group" style={{ margin: 0, flex: "1 1 130px" }}>
           <label>From</label>
           <input type="date" className="form-input" value={filters.dateFrom ?? ""}
@@ -148,6 +165,13 @@ export default function ExpensesPage() {
               </select>
             </div>
             <div className="form-group">
+              <label>Payment Method</label>
+              <select className="form-input" value={form.paymentMethod ?? "CARD"}
+                onChange={(e) => setForm((f) => ({ ...f, paymentMethod: e.target.value as PaymentMethod }))}>
+                {PAYMENT_METHODS.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
+              </select>
+            </div>
+            <div className="form-group">
               <label>Description</label>
               <input className="form-input" value={form.description ?? ""}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
@@ -171,6 +195,7 @@ export default function ExpensesPage() {
                 <tr>
                   <th style={{ cursor: "pointer" }} onClick={() => handleSort("title")}>Title{sortArrow("title")}</th>
                   <th>Category</th>
+                  <th>Payment</th>
                   <th style={{ cursor: "pointer" }} onClick={() => handleSort("date")}>Date{sortArrow("date")}</th>
                   <th style={{ cursor: "pointer", textAlign: "right" }} onClick={() => handleSort("amount")}>Amount{sortArrow("amount")}</th>
                   <th />
@@ -188,6 +213,7 @@ export default function ExpensesPage() {
                         ? <span className="badge">{e.category.name}</span>
                         : "—"}
                     </td>
+                    <td style={{ fontSize: "0.85rem" }}>{PAYMENT_METHODS.find(p => p.value === e.paymentMethod)?.label ?? e.paymentMethod}</td>
                     <td>{new Date(e.date).toLocaleDateString()}</td>
                     <td style={{ textAlign: "right", fontWeight: 600 }}>${parseFloat(e.amount).toFixed(2)}</td>
                     <td style={{ whiteSpace: "nowrap" }}>
