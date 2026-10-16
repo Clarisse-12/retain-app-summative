@@ -6,6 +6,7 @@ const {
   deleteCategory,
 } = require("../controllers/category.controller");
 const authMiddleware = require("../middleware/auth.middleware");
+const adminMiddleware = require("../middleware/admin.middleware");
 const validate = require("../middleware/validate.middleware");
 const asyncHandler = require("../utils/asyncHandler");
 const { categorySchema, updateCategorySchema } = require("../validators/category.validator");
@@ -15,16 +16,12 @@ const router = Router();
 // All category routes require authentication
 router.use(authMiddleware);
 
-// GET /api/categories
+// GET /api/categories — any authenticated user (needed for expense/budget forms)
 router.get("/", asyncHandler(getCategories));
 
-// POST /api/categories
-router.post("/", validate(categorySchema), asyncHandler(createCategory));
-
-// PATCH /api/categories/:id
-router.patch("/:id", validate(updateCategorySchema), asyncHandler(updateCategory));
-
-// DELETE /api/categories/:id
-router.delete("/:id", asyncHandler(deleteCategory));
+// Write operations — admin only
+router.post("/", adminMiddleware, validate(categorySchema), asyncHandler(createCategory));
+router.patch("/:id", adminMiddleware, validate(updateCategorySchema), asyncHandler(updateCategory));
+router.delete("/:id", adminMiddleware, asyncHandler(deleteCategory));
 
 module.exports = router;

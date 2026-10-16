@@ -34,7 +34,7 @@ const createBudget = async (req, res) => {
 
   if (categoryId) {
     const category = await prisma.category.findUnique({ where: { id: categoryId } });
-    if (!category || category.userId !== userId) {
+    if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
   }
@@ -42,9 +42,9 @@ const createBudget = async (req, res) => {
   const duplicate = await prisma.budget.findFirst({
     where: {
       userId,
-      month,
-      year,
-      categoryId: categoryId ?? null,
+      month: parseInt(month, 10),
+      year: parseInt(year, 10),
+      categoryId: categoryId ? categoryId : null,
     },
   });
 
@@ -56,8 +56,8 @@ const createBudget = async (req, res) => {
   const budget = await prisma.budget.create({
     data: {
       amount,
-      month,
-      year,
+      month: parseInt(month, 10),
+      year: parseInt(year, 10),
       userId,
       categoryId: categoryId ?? null,
     },

@@ -42,10 +42,10 @@ export default function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/expenses" element={<ExpensesPage />} />
           <Route path="/budgets" element={<BudgetsPage />} />
-          <Route path="/categories" element={<CategoriesPage />} />
 
           <Route element={<RequireAdmin />}>
             <Route path="/admin" element={<AdminPage />} />
+            <Route path="/categories" element={<CategoriesPage />} />
           </Route>
         </Route>
 

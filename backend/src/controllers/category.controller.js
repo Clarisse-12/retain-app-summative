@@ -6,7 +6,6 @@ const prisma = require("../config/database");
  */
 const getCategories = async (req, res) => {
   const categories = await prisma.category.findMany({
-    where: { userId: req.user.id },
     orderBy: { name: "asc" },
   });
 
