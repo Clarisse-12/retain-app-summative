@@ -84,7 +84,7 @@ const updateBudget = async (req, res) => {
 
   if (categoryId) {
     const category = await prisma.category.findUnique({ where: { id: categoryId } });
-    if (!category || category.userId !== userId) {
+    if (!category) {
       return res.status(404).json({ message: "Category not found" });
     }
   }

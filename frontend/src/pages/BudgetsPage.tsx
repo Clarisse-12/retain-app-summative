@@ -4,6 +4,8 @@ import { budgetApi, categoryApi } from "../services/api";
 import type { BudgetSummaryItem, Category, CreateBudgetInput } from "../types";
 
 const now = new Date();
+// Wider year range: 3 years back, 5 years forward
+const YEARS = Array.from({ length: 9 }, (_, i) => now.getFullYear() - 3 + i);
 
 function budgetStatus(pct: number) {
   if (pct >= 100) return { label: "Over budget", color: "var(--color-danger)" };
@@ -76,7 +78,7 @@ export default function BudgetsPage() {
   const monthName = new Date(year, month - 1).toLocaleString("default", { month: "long" });
   const totalBudgeted = summary.reduce((s, b) => s + parseFloat(b.amount), 0);
 
-  const years = Array.from({ length: 5 }, (_, i) => now.getFullYear() - 2 + i);
+  const years = YEARS;
 
   return (
     <Layout>
@@ -115,6 +117,15 @@ export default function BudgetsPage() {
             ${(totalBudgeted - totalSpent).toFixed(2)}
           </div>
         </div>
+        {totalBudgeted > 0 && (() => {
+          const s = budgetStatus(totalBudgeted > 0 ? (totalSpent / totalBudgeted) * 100 : 0);
+          return (
+            <div className="card" style={{ textAlign: "center" }}>
+              <div style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", marginBottom: "0.4rem" }}>Overall status</div>
+              <div style={{ fontSize: "1.1rem", fontWeight: 700, color: s.color }}>{s.label}</div>
+            </div>
+          );
+        })()}
       </div>
 
       {/* Form */}
