@@ -50,6 +50,9 @@ export interface ExpenseQueryParams {
   dateFrom?: string;
   dateTo?: string;
   search?: string;
+  paymentMethod?: string;
+  amountMin?: number;
+  amountMax?: number;
   sortBy?: 'date' | 'amount' | 'title';
   order?: 'asc' | 'desc';
   page?: number;

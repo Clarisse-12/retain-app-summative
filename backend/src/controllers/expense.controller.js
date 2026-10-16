@@ -18,6 +18,8 @@ const getExpenses = async (req, res) => {
     dateTo,
     search,
     paymentMethod,
+    amountMin,
+    amountMax,
     sortBy = "date",
     order = "desc",
     page = "1",
@@ -36,6 +38,12 @@ const getExpenses = async (req, res) => {
   if (categoryId) where.categoryId = categoryId;
 
   if (paymentMethod) where.paymentMethod = paymentMethod;
+
+  if (amountMin || amountMax) {
+    where.amount = {};
+    if (amountMin) where.amount.gte = parseFloat(amountMin);
+    if (amountMax) where.amount.lte = parseFloat(amountMax);
+  }
 
   if (dateFrom || dateTo) {
     where.date = {};

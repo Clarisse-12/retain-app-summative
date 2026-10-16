@@ -5,6 +5,12 @@ import type { BudgetSummaryItem, Category, CreateBudgetInput } from "../types";
 
 const now = new Date();
 
+function budgetStatus(pct: number) {
+  if (pct >= 100) return { label: "Over budget", color: "var(--color-danger)" };
+  if (pct >= 80)  return { label: "Approaching", color: "#f59e0b" };
+  return { label: "Within budget", color: "var(--color-accent)" };
+}
+
 export default function BudgetsPage() {
   const [month, setMonth] = useState(now.getMonth() + 1);
   const [year, setYear] = useState(now.getFullYear());
@@ -165,7 +171,9 @@ export default function BudgetsPage() {
         <p style={{ color: "var(--color-text-muted)" }}>No budgets for {monthName} {year}.</p>
       ) : (
         <div style={{ display: "flex", flexDirection: "column", gap: "1rem" }}>
-          {summary.map((b) => (
+          {summary.map((b) => {
+            const s = budgetStatus(b.percentUsed);
+            return (
             <div key={b.id} className="card">
               <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: "0.75rem" }}>
                 <div>
@@ -176,7 +184,8 @@ export default function BudgetsPage() {
                     ${b.spent.toFixed(2)} spent of ${parseFloat(b.amount).toFixed(2)}
                   </div>
                 </div>
-                <div style={{ display: "flex", gap: "0.4rem" }}>
+                <div style={{ display: "flex", gap: "0.4rem", alignItems: "center" }}>
+                  <span style={{ fontSize: "0.8rem", fontWeight: 600, color: s.color }}>{s.label}</span>
                   <button className="btn btn-secondary" style={{ padding: "0.2rem 0.5rem", fontSize: "0.8rem" }} onClick={() => openEdit(b)}>Edit</button>
                   <button className="btn btn-danger" style={{ padding: "0.2rem 0.5rem", fontSize: "0.8rem" }} onClick={() => handleDelete(b.id)}>Delete</button>
                 </div>
@@ -184,7 +193,7 @@ export default function BudgetsPage() {
               <div className="progress-bar">
                 <div className="progress-bar-fill" style={{
                   width: `${Math.min(b.percentUsed, 100)}%`,
-                  background: b.percentUsed >= 100 ? "var(--color-danger)" : b.percentUsed >= 80 ? "#f59e0b" : "var(--color-accent)",
+                  background: s.color,
                 }} />
               </div>
               <div style={{ display: "flex", justifyContent: "space-between", fontSize: "0.8rem", marginTop: "0.4rem", color: "var(--color-text-muted)" }}>
@@ -192,7 +201,8 @@ export default function BudgetsPage() {
                 <span>${b.remaining.toFixed(2)} remaining</span>
               </div>
             </div>
-          ))}
+            );
+          })}
         </div>
       )}
     </Layout>

@@ -133,6 +133,16 @@ export default function ExpensesPage() {
           <input type="date" className="form-input" value={filters.dateTo ?? ""}
             onChange={(e) => dispatch(setFilters({ dateTo: e.target.value || undefined }))} />
         </div>
+        <div className="form-group" style={{ margin: 0, flex: "1 1 110px" }}>
+          <label>Min ($)</label>
+          <input type="number" min="0" step="0.01" className="form-input" value={filters.amountMin ?? ""}
+            onChange={(e) => dispatch(setFilters({ amountMin: e.target.value ? parseFloat(e.target.value) : undefined }))} />
+        </div>
+        <div className="form-group" style={{ margin: 0, flex: "1 1 110px" }}>
+          <label>Max ($)</label>
+          <input type="number" min="0" step="0.01" className="form-input" value={filters.amountMax ?? ""}
+            onChange={(e) => dispatch(setFilters({ amountMax: e.target.value ? parseFloat(e.target.value) : undefined }))} />
+        </div>
         <button className="btn btn-secondary" onClick={() => dispatch(resetFilters())}>Reset</button>
       </div>
 

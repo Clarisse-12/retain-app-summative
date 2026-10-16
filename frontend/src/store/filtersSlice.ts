@@ -7,6 +7,8 @@ const initialState: ExpenseFilters = {
   dateFrom: undefined,
   dateTo: undefined,
   search: undefined,
+  amountMin: undefined,
+  amountMax: undefined,
   sortBy: "date",
   order: "desc",
   page: 1,
