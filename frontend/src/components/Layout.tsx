@@ -11,6 +11,17 @@ export default function Layout({ children }: { children: ReactNode }) {
     navigate("/login");
   };
 
+  const navLinks = isAdmin
+    ? [
+        { to: "/admin",            label: "Admin Dashboard" },
+        { to: "/admin/categories", label: "Categories" },
+      ]
+    : [
+        { to: "/dashboard", label: "Dashboard" },
+        { to: "/expenses",  label: "Expenses" },
+        { to: "/budgets",   label: "Budgets" },
+      ];
+
   return (
     <div style={{ display: "flex", minHeight: "100vh" }}>
       <nav style={{
@@ -27,12 +38,7 @@ export default function Layout({ children }: { children: ReactNode }) {
           Retain
         </div>
 
-        {[
-          { to: "/dashboard", label: "Dashboard" },
-          { to: "/expenses", label: "Expenses" },
-          { to: "/budgets", label: "Budgets" },
-          ...(isAdmin ? [{ to: "/admin", label: "Admin" }] : []),
-        ].map(({ to, label }) => (
+        {navLinks.map(({ to, label }) => (
           <NavLink
             key={to}
             to={to}
