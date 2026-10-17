@@ -4,7 +4,7 @@ import { budgetApi, categoryApi } from "../services/api";
 import type { BudgetSummaryItem, Category, CreateBudgetInput } from "../types";
 
 const now = new Date();
-// Wider year range: 3 years back, 5 years forward
+// Generate a list of years from 3 years ago to 5 years in the future
 const YEARS = Array.from({ length: 9 }, (_, i) => now.getFullYear() - 3 + i);
 
 type MonthContext = "past" | "current" | "future";
@@ -18,11 +18,11 @@ function getMonthContext(month: number, year: number): MonthContext {
 }
 
 function budgetStatus(pct: number, ctx: MonthContext) {
-  // Past month with no/low spending recorded → treat as over budget (missed tracking)
+  // Past month → always over budget if spent more than budgeted
   if (ctx === "past" && pct < 100) return { label: "Over budget", color: "var(--color-danger)" };
-  // Future month → always approaching (planned but not yet spent)
+  // Future month → always approaching if budgeted at all
   if (ctx === "future") return { label: "Approaching", color: "#f59e0b" };
-  // Current month → use actual percentage
+  // Current month → use thresholds
   if (pct >= 100) return { label: "Over budget", color: "var(--color-danger)" };
   if (pct >= 80)  return { label: "Approaching", color: "#f59e0b" };
   return { label: "Within budget", color: "var(--color-accent)" };
@@ -102,7 +102,7 @@ export default function BudgetsPage() {
         <button className="btn btn-primary" onClick={openCreate}>+ New budget</button>
       </div>
 
-      {/* Month/year picker */}
+      //month/year selector and context label
       <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
         <select className="form-input" style={{ width: 140 }} value={month} onChange={(e) => setMonth(Number(e.target.value))}>
           {Array.from({ length: 12 }, (_, i) => (
@@ -123,7 +123,7 @@ export default function BudgetsPage() {
         </span>
       </div>
 
-      {/* Summary cards */}
+      //summary cards
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
         <div className="card" style={{ textAlign: "center" }}>
           <div style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", marginBottom: "0.4rem" }}>Total budgeted</div>
@@ -150,7 +150,7 @@ export default function BudgetsPage() {
         })()}
       </div>
 
-      {/* Form */}
+      //form
       {showForm && (
         <div className="card" style={{ marginBottom: "1.5rem", maxWidth: 420 }}>
           <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>{editing ? "Edit budget" : "New budget"}</h3>
@@ -199,7 +199,7 @@ export default function BudgetsPage() {
         </div>
       )}
 
-      {/* Budget list with progress bars */}
+      //budget list
       {loading ? <div className="spinner" /> : summary.length === 0 ? (
         <p style={{ color: "var(--color-text-muted)" }}>No budgets for {monthName} {year}.</p>
       ) : (

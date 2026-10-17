@@ -44,19 +44,19 @@ export default function DashboardPage() {
 
   useEffect(() => { load(); }, [load]);
 
-  // ── Derived values ────────────────────────────────────────
+  // Calculate overall budget status
   const totalBudgeted = budgetSummary.reduce((s, b) => s + parseFloat(b.amount), 0);
   const remaining     = totalBudgeted - totalSpent;
   const overallPct    = totalBudgeted > 0 ? (totalSpent / totalBudgeted) * 100 : 0;
   const status        = budgetStatus(overallPct);
 
-  // Highest individual expense for selected month
+  // Find the highest individual expense for the selected month
   const highestExpense = monthExpenses.reduce<Expense | null>(
     (max, e) => !max || parseFloat(e.amount) > parseFloat(max.amount) ? e : max,
     null
   );
 
-  // Spending by category for selected month
+  // Calculate spending by category for the selected month
   const categorySpend: Record<string, { name: string; total: number }> = {};
   for (const e of monthExpenses) {
     const key  = e.categoryId ?? "__none__";
@@ -70,7 +70,7 @@ export default function DashboardPage() {
 
   return (
     <Layout>
-      {/* Header + month picker */}
+      // Header + month picker
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.75rem" }}>
         <h2 style={{ color: "var(--color-primary)", margin: 0 }}>
           Welcome back, {user?.name}
@@ -91,7 +91,7 @@ export default function DashboardPage() {
 
       {loading ? <div className="spinner" /> : (
         <>
-          {/* ── 1. Summary cards ─────────────────────────────── */}
+          //1. Summary cards
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
 
             {/* Total spending */}
@@ -150,7 +150,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* ── 2. Spending by category ───────────────────────── */}
+          //2. Spending by category
           <div className="card" style={{ marginBottom: "2rem" }}>
             <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>
               Spending by category — {monthLabel} {year}
@@ -175,7 +175,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          {/* ── 3. Budget progress ───────────────────────────── */}
+          //3. Budget progress
           {budgetSummary.length > 0 && (
             <div className="card" style={{ marginBottom: "2rem" }}>
               <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>
@@ -201,7 +201,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          {/* ── 4. Recent expenses ───────────────────────────── */}
+          //4. Recent expenses
           <div className="card">
             <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>Recent expenses</h3>
             {recentExpenses.length === 0 ? (

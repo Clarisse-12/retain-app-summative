@@ -100,7 +100,7 @@ export default function ExpensesPage() {
         <button className="btn btn-primary" onClick={openCreate}>+ New expense</button>
       </div>
 
-      {/* Filters */}
+      // Filters
       <div className="card" style={{ marginBottom: "1.25rem", display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
         <div className="form-group" style={{ margin: 0, flex: "1 1 160px" }}>
           <label>Search</label>
@@ -146,7 +146,7 @@ export default function ExpensesPage() {
         <button className="btn btn-secondary" onClick={() => dispatch(resetFilters())}>Reset</button>
       </div>
 
-      {/* Form */}
+      // Form
       {showForm && (
         <div className="card" style={{ marginBottom: "1.25rem", maxWidth: 460 }}>
           <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>{editing ? "Edit expense" : "New expense"}</h3>
@@ -194,7 +194,7 @@ export default function ExpensesPage() {
         </div>
       )}
 
-      {/* Table */}
+      // Table
       {loading ? <div className="spinner" /> : expenses.length === 0 ? (
         <p style={{ color: "var(--color-text-muted)" }}>No expenses found.</p>
       ) : (
@@ -238,7 +238,7 @@ export default function ExpensesPage() {
         </div>
       )}
 
-      {/* Pagination */}
+      // Pagination
       {totalPages > 1 && (
         <div className="pagination" style={{ marginTop: "1rem" }}>
           <button className="btn btn-secondary" disabled={filters.page === 1} onClick={() => dispatch(setPage(filters.page - 1))}>‹ Prev</button>

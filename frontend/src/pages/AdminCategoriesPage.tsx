@@ -53,8 +53,8 @@ export default function AdminCategoriesPage() {
   return (
     <Layout>
       <h2 style={{ marginBottom: "1.5rem", color: "var(--color-primary)" }}>Manage Categories</h2>
-
-      {/* Create / Edit form */}
+      //category form
+      
       <div className="card" style={{ marginBottom: "2rem", maxWidth: 480 }}>
         <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>
           {editing ? `Edit "${editing.name}"` : "New category"}
@@ -78,8 +78,8 @@ export default function AdminCategoriesPage() {
           )}
         </form>
       </div>
-
-      {/* Category list */}
+         //category list
+      
       {loading ? <div className="spinner" /> : categories.length === 0 ? (
         <p style={{ color: "var(--color-text-muted)" }}>No categories yet. Add one above.</p>
       ) : (
