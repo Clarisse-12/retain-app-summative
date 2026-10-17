@@ -70,7 +70,7 @@ export default function DashboardPage() {
 
   return (
     <Layout>
-      // Header + month picker
+      {/* Header + month picker/ */}
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.75rem" }}>
         <h2 style={{ color: "var(--color-primary)", margin: 0 }}>
           Welcome back, {user?.name}
@@ -91,7 +91,7 @@ export default function DashboardPage() {
 
       {loading ? <div className="spinner" /> : (
         <>
-          //1. Summary cards
+          {/*1. Summary cards*/}
           <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(170px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
 
             {/* Total spending */}
@@ -150,7 +150,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          //2. Spending by category
+          {/*2. Spending by category*/}
           <div className="card" style={{ marginBottom: "2rem" }}>
             <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>
               Spending by category — {monthLabel} {year}
@@ -175,7 +175,7 @@ export default function DashboardPage() {
             )}
           </div>
 
-          //3. Budget progress
+          {/*3. Budget progress/summary*/}
           {budgetSummary.length > 0 && (
             <div className="card" style={{ marginBottom: "2rem" }}>
               <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>
@@ -201,7 +201,7 @@ export default function DashboardPage() {
             </div>
           )}
 
-          //4. Recent expenses
+          {/*4. Recent expenses*/}
           <div className="card">
             <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>Recent expenses</h3>
             {recentExpenses.length === 0 ? (

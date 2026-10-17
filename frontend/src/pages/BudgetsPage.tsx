@@ -102,7 +102,7 @@ export default function BudgetsPage() {
         <button className="btn btn-primary" onClick={openCreate}>+ New budget</button>
       </div>
 
-      //month/year selector and context label
+      {/*month/year selector and context label*/}
       <div style={{ display: "flex", gap: "0.75rem", marginBottom: "1.5rem", alignItems: "center", flexWrap: "wrap" }}>
         <select className="form-input" style={{ width: 140 }} value={month} onChange={(e) => setMonth(Number(e.target.value))}>
           {Array.from({ length: 12 }, (_, i) => (
@@ -123,7 +123,7 @@ export default function BudgetsPage() {
         </span>
       </div>
 
-      //summary cards
+      {/*summary cards*/}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(180px, 1fr))", gap: "1rem", marginBottom: "1.5rem" }}>
         <div className="card" style={{ textAlign: "center" }}>
           <div style={{ fontSize: "0.85rem", color: "var(--color-text-muted)", marginBottom: "0.4rem" }}>Total budgeted</div>
@@ -150,7 +150,7 @@ export default function BudgetsPage() {
         })()}
       </div>
 
-      //form
+      {/*form*/}
       {showForm && (
         <div className="card" style={{ marginBottom: "1.5rem", maxWidth: 420 }}>
           <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>{editing ? "Edit budget" : "New budget"}</h3>
@@ -199,7 +199,7 @@ export default function BudgetsPage() {
         </div>
       )}
 
-      //budget list
+      {/*budget list*/}
       {loading ? <div className="spinner" /> : summary.length === 0 ? (
         <p style={{ color: "var(--color-text-muted)" }}>No budgets for {monthName} {year}.</p>
       ) : (

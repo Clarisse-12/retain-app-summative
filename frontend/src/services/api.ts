@@ -17,13 +17,13 @@ import type {
   AdminInsightsResponse,
 } from '../types';
 
-// ── Axios instance ───────────────────────────────────────────
+// Create an Axios instance with the base URL and default headers
 const api = axios.create({
   baseURL: 'http://localhost:5000/api',
   headers: { 'Content-Type': 'application/json' },
 });
 
-// Attach the JWT from localStorage to every request automatically
+// Add a request interceptor to include the token in the Authorization header
 api.interceptors.request.use((config) => {
   const token = localStorage.getItem('token');
   if (token) {
@@ -32,7 +32,7 @@ api.interceptors.request.use((config) => {
   return config;
 });
 
-// ── Auth ─────────────────────────────────────────────────────
+//Aunthentication API
 export const authApi = {
   register: (data: { name: string; email: string; password: string }) =>
     api.post<AuthResponse>('/auth/register', data).then((r) => r.data),
@@ -44,7 +44,7 @@ export const authApi = {
     api.get<{ user: AuthResponse['user'] }>('/auth/me').then((r) => r.data),
 };
 
-// ── Expenses ─────────────────────────────────────────────────
+//Expenses API
 export interface ExpenseQueryParams {
   categoryId?: string;
   dateFrom?: string;
@@ -76,7 +76,7 @@ export const expenseApi = {
     api.delete<{ message: string }>(`/expenses/${id}`).then((r) => r.data),
 };
 
-// ── Categories ───────────────────────────────────────────────
+//Categories API
 export const categoryApi = {
   list: () =>
     api.get<CategoryListResponse>('/categories').then((r) => r.data),
@@ -91,7 +91,7 @@ export const categoryApi = {
     api.delete<{ message: string }>(`/categories/${id}`).then((r) => r.data),
 };
 
-// ── Budgets ──────────────────────────────────────────────────
+//Budgets API
 export const budgetApi = {
   list: (params: { month?: number; year?: number } = {}) =>
     api.get<BudgetListResponse>('/budgets', { params }).then((r) => r.data),
@@ -109,7 +109,7 @@ export const budgetApi = {
     api.delete<{ message: string }>(`/budgets/${id}`).then((r) => r.data),
 };
 
-// ── Admin ────────────────────────────────────────────────────
+//Admin API
 export const adminApi = {
   dashboard: () =>
     api.get<AdminDashboardResponse>('/admin/dashboard').then((r) => r.data),

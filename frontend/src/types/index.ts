@@ -20,7 +20,7 @@ export interface AdminUser extends User {
   };
 }
 
-// ── Category ─────────────────────────────────────────────────
+//category
 export interface Category {
   id: string;
   name: string;
@@ -29,13 +29,13 @@ export interface Category {
   updatedAt: string;
 }
 
-// Minimal category shape returned inside expense/budget objects
+//Category reference for use in other interfaces
 export interface CategoryRef {
   id: string;
   name: string;
 }
 
-// ── Expense ──────────────────────────────────────────────────
+//Expenses
 export interface Expense {
   id: string;
   title: string;
@@ -61,7 +61,7 @@ export interface CreateExpenseInput {
 
 export interface UpdateExpenseInput extends Partial<CreateExpenseInput> {}
 
-// ── Budget ───────────────────────────────────────────────────
+//Budget
 export interface Budget {
   id: string;
   amount: string;        // Prisma Decimal — use parseFloat()
@@ -74,7 +74,7 @@ export interface Budget {
   updatedAt: string;
 }
 
-// Budget summary item returned by GET /api/budgets/summary
+//Budget summary items
 export interface BudgetSummaryItem extends Budget {
   spent: number;
   remaining: number;
@@ -97,7 +97,7 @@ export interface CreateBudgetInput {
 
 export interface UpdateBudgetInput extends Partial<CreateBudgetInput> {}
 
-// ── Pagination ───────────────────────────────────────────────
+//Pagination interface for API responses
 export interface Pagination {
   total: number;
   page: number;
@@ -105,7 +105,7 @@ export interface Pagination {
   totalPages: number;
 }
 
-// ── API response wrappers ────────────────────────────────────
+//API response interfaces for the frontend
 export interface AuthResponse {
   token: string;
   user: User;
@@ -136,7 +136,7 @@ export interface BudgetResponse {
   budget: Budget;
 }
 
-// ── Admin ────────────────────────────────────────────────────
+//admin API responses
 export interface AdminStats {
   totalUsers: number;
   totalExpenses: number;
@@ -181,7 +181,7 @@ export interface AdminInsightsResponse {
   spendingByMonth: SpendingByMonth[];
 }
 
-// ── Expense filter (Redux state shape) ───────────────────────
+//Expense filters for the frontend
 export interface ExpenseFilters {
   search?: string;
   categoryId?: string;
@@ -196,7 +196,7 @@ export interface ExpenseFilters {
   limit: number;
 }
 
-// ── Generic API error ────────────────────────────────────────
+//API error response interface
 export interface ApiError {
   response?: {
     data?: {

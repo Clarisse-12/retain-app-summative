@@ -23,7 +23,9 @@ export default function AdminPage() {
     <Layout>
       <h2 style={{ marginBottom: "1.5rem", color: "var(--color-primary)" }}>Admin Dashboard</h2>
 
-      //dashboard stats
+
+
+      {/*dashboard stats*/}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "1rem", marginBottom: "2rem" }}>
         {[
           { label: "Total users",    value: stats.totalUsers },
@@ -38,7 +40,7 @@ export default function AdminPage() {
         ))}
       </div>
 
-      //top 5 and bottom 5 categories
+      {/*top 5 and bottom 5 categories*/}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
         <div className="card">
           <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>Top 5 categories</h3>
@@ -76,7 +78,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      //spending per category and spending per month
+      {/*spending per category and spending per month*/}
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "1rem", marginBottom: "2rem" }}>
         <div className="card">
           <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>Spending by category</h3>
@@ -114,7 +116,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      //recently registered users
+      {/*recently registered users*/}
       <div className="card" style={{ marginBottom: "2rem" }}>
         <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>Recently registered users</h3>
         <div className="table-wrapper">
@@ -134,7 +136,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      //all users
+      {/*all users/*/}
       <div className="card" style={{ marginBottom: "2rem" }}>
         <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>All users</h3>
         <div className="table-wrapper">
@@ -163,7 +165,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      //recently added expenses
+      {/*recently added expenses*/}
       <div className="card">
         <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>Recently added expenses</h3>
         <div className="table-wrapper">
