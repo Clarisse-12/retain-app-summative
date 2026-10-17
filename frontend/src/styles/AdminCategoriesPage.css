@@ -1,0 +1,51 @@
+.categories-header {
+  margin-bottom: 1.5rem;
+  color: var(--color-primary);
+}
+
+.categories-form-card {
+  margin-bottom: 2rem;
+  max-width: 480px;
+}
+
+.categories-form-card h3 {
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+}
+
+.categories-form {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.categories-form-input {
+  flex: 1 1 200px;
+}
+
+.categories-table-card {
+  padding: 0;
+}
+
+.td-name {
+  font-weight: 500;
+}
+
+.td-cat-actions {
+  white-space: nowrap;
+}
+
+.btn-cat-edit {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.8rem;
+  margin-right: 0.4rem;
+}
+
+.btn-cat-delete {
+  padding: 0.2rem 0.55rem;
+  font-size: 0.8rem;
+}
+
+.no-categories {
+  color: var(--color-text-muted);
+}

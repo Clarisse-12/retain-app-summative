@@ -1,0 +1,99 @@
+.landing {
+  min-height: 100vh;
+  background: var(--color-bg);
+}
+
+.landing-header {
+  background: var(--color-primary);
+  padding: 1rem 2rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.landing-logo {
+  color: #fff;
+  font-weight: 700;
+  font-size: 1.25rem;
+}
+
+.landing-header-actions {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  color: #fff;
+}
+
+.landing-hero {
+  text-align: center;
+  padding: 5rem 1rem 3rem;
+}
+
+.landing-hero h1 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  color: var(--color-primary);
+  margin-bottom: 1rem;
+}
+
+.landing-hero p {
+  color: var(--color-text-muted);
+  font-size: 1.1rem;
+  max-width: 480px;
+  margin: 0 auto 2rem;
+}
+
+.landing-hero-actions {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.btn-lg {
+  font-size: 1rem;
+  padding: 0.75rem 2rem;
+}
+
+.landing-features {
+  max-width: 860px;
+  margin: 0 auto;
+  padding: 2rem 1rem 4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.5rem;
+}
+
+.feature-card {
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.feature-title {
+  font-weight: 700;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+}
+
+.feature-desc {
+  font-size: 0.9rem;
+  color: var(--color-text-muted);
+}
+
+.landing-cta {
+  text-align: center;
+  padding: 2rem 1rem 4rem;
+}
+
+.landing-cta p {
+  color: var(--color-text-muted);
+  margin-bottom: 1rem;
+}

@@ -4,30 +4,31 @@ import { expenseApi, categoryApi } from "../services/api";
 import { useAppDispatch, useAppSelector } from "../store";
 import { setFilters, setPage, resetFilters } from "../store/filtersSlice";
 import type { Expense, Category, CreateExpenseInput, PaymentMethod } from "../types";
+import "../styles/ExpensesPage.css";
 
 const PAYMENT_METHODS: { value: PaymentMethod; label: string }[] = [
-  { value: "CASH", label: "Cash" },
-  { value: "CARD", label: "Card" },
-  { value: "BANK_TRANSFER", label: "Bank Transfer" },
+  { value: "CASH",           label: "Cash" },
+  { value: "CARD",           label: "Card" },
+  { value: "BANK_TRANSFER",  label: "Bank Transfer" },
   { value: "MOBILE_PAYMENT", label: "Mobile Payment" },
-  { value: "OTHER", label: "Other" },
+  { value: "OTHER",          label: "Other" },
 ];
 
 const EMPTY_FORM: CreateExpenseInput = { title: "", amount: 0, description: "", categoryId: null, paymentMethod: "CARD" };
 
 export default function ExpensesPage() {
   const dispatch = useAppDispatch();
-  const filters = useAppSelector((s) => s.filters);
+  const filters  = useAppSelector((s) => s.filters);
 
-  const [expenses, setExpenses] = useState<Expense[]>([]);
+  const [expenses,   setExpenses]   = useState<Expense[]>([]);
   const [totalPages, setTotalPages] = useState(1);
   const [categories, setCategories] = useState<Category[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [showForm, setShowForm] = useState(false);
-  const [editing, setEditing] = useState<Expense | null>(null);
-  const [form, setForm] = useState<CreateExpenseInput>(EMPTY_FORM);
-  const [formError, setFormError] = useState("");
-  const [saving, setSaving] = useState(false);
+  const [loading,    setLoading]    = useState(true);
+  const [showForm,   setShowForm]   = useState(false);
+  const [editing,    setEditing]    = useState<Expense | null>(null);
+  const [form,       setForm]       = useState<CreateExpenseInput>(EMPTY_FORM);
+  const [formError,  setFormError]  = useState("");
+  const [saving,     setSaving]     = useState(false);
 
   const load = useCallback(() => {
     setLoading(true);
@@ -41,7 +42,7 @@ export default function ExpensesPage() {
 
   const openCreate = () => {
     setEditing(null);
-    setForm({ ...EMPTY_FORM, date: new Date().toISOString().slice(0, 10), paymentMethod: "CARD" });
+    setForm({ ...EMPTY_FORM, date: new Date().toISOString().slice(0, 10) });
     setFormError("");
     setShowForm(true);
   };
@@ -49,12 +50,9 @@ export default function ExpensesPage() {
   const openEdit = (e: Expense) => {
     setEditing(e);
     setForm({
-      title: e.title,
-      description: e.description ?? "",
-      amount: parseFloat(e.amount),
-      date: e.date.slice(0, 10),
-      categoryId: e.categoryId,
-      paymentMethod: e.paymentMethod,
+      title: e.title, description: e.description ?? "",
+      amount: parseFloat(e.amount), date: e.date.slice(0, 10),
+      categoryId: e.categoryId, paymentMethod: e.paymentMethod,
     });
     setFormError("");
     setShowForm(true);
@@ -69,7 +67,7 @@ export default function ExpensesPage() {
     try {
       const payload = { ...form, date: form.date ? new Date(form.date).toISOString() : undefined };
       if (editing) await expenseApi.update(editing.id, payload);
-      else await expenseApi.create(payload);
+      else         await expenseApi.create(payload);
       load();
       closeForm();
     } catch (err) {
@@ -95,19 +93,19 @@ export default function ExpensesPage() {
 
   return (
     <Layout>
-      <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.25rem" }}>
-        <h2 style={{ color: "var(--color-primary)" }}>Expenses</h2>
+      <div className="page-header">
+        <h2>Expenses</h2>
         <button className="btn btn-primary" onClick={openCreate}>+ New expense</button>
       </div>
 
       {/* Filters */}
-      <div className="card" style={{ marginBottom: "1.25rem", display: "flex", flexWrap: "wrap", gap: "0.75rem", alignItems: "flex-end" }}>
-        <div className="form-group" style={{ margin: 0, flex: "1 1 160px" }}>
+      <div className="card filters-card">
+        <div className="form-group filter-group">
           <label>Search</label>
           <input className="form-input" placeholder="Title…" value={filters.search ?? ""}
             onChange={(e) => dispatch(setFilters({ search: e.target.value || undefined }))} />
         </div>
-        <div className="form-group" style={{ margin: 0, flex: "1 1 140px" }}>
+        <div className="form-group filter-group-cat">
           <label>Category</label>
           <select className="form-input" value={filters.categoryId ?? ""}
             onChange={(e) => dispatch(setFilters({ categoryId: e.target.value || undefined }))}>
@@ -115,7 +113,7 @@ export default function ExpensesPage() {
             {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
           </select>
         </div>
-        <div className="form-group" style={{ margin: 0, flex: "1 1 140px" }}>
+        <div className="form-group filter-group-cat">
           <label>Payment</label>
           <select className="form-input" value={filters.paymentMethod ?? ""}
             onChange={(e) => dispatch(setFilters({ paymentMethod: e.target.value || undefined }))}>
@@ -123,22 +121,22 @@ export default function ExpensesPage() {
             {PAYMENT_METHODS.map((p) => <option key={p.value} value={p.value}>{p.label}</option>)}
           </select>
         </div>
-        <div className="form-group" style={{ margin: 0, flex: "1 1 130px" }}>
+        <div className="form-group filter-group-md">
           <label>From</label>
           <input type="date" className="form-input" value={filters.dateFrom ?? ""}
             onChange={(e) => dispatch(setFilters({ dateFrom: e.target.value || undefined }))} />
         </div>
-        <div className="form-group" style={{ margin: 0, flex: "1 1 130px" }}>
+        <div className="form-group filter-group-md">
           <label>To</label>
           <input type="date" className="form-input" value={filters.dateTo ?? ""}
             onChange={(e) => dispatch(setFilters({ dateTo: e.target.value || undefined }))} />
         </div>
-        <div className="form-group" style={{ margin: 0, flex: "1 1 110px" }}>
+        <div className="form-group filter-group-sm">
           <label>Min ($)</label>
           <input type="number" min="0" step="0.01" className="form-input" value={filters.amountMin ?? ""}
             onChange={(e) => dispatch(setFilters({ amountMin: e.target.value ? parseFloat(e.target.value) : undefined }))} />
         </div>
-        <div className="form-group" style={{ margin: 0, flex: "1 1 110px" }}>
+        <div className="form-group filter-group-sm">
           <label>Max ($)</label>
           <input type="number" min="0" step="0.01" className="form-input" value={filters.amountMax ?? ""}
             onChange={(e) => dispatch(setFilters({ amountMax: e.target.value ? parseFloat(e.target.value) : undefined }))} />
@@ -146,15 +144,16 @@ export default function ExpensesPage() {
         <button className="btn btn-secondary" onClick={() => dispatch(resetFilters())}>Reset</button>
       </div>
 
-      {/* Form/ */}
+      {/* Form */}
       {showForm && (
-        <div className="card" style={{ marginBottom: "1.25rem", maxWidth: 460 }}>
-          <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>{editing ? "Edit expense" : "New expense"}</h3>
-          {formError && <div className="alert alert-error" style={{ marginBottom: "1rem" }}>{formError}</div>}
+        <div className="card form-card">
+          <h3>{editing ? "Edit expense" : "New expense"}</h3>
+          {formError && <div className="alert alert-error">{formError}</div>}
           <form onSubmit={handleSubmit}>
             <div className="form-group">
               <label>Title</label>
-              <input className="form-input" value={form.title} onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} required autoFocus />
+              <input className="form-input" value={form.title}
+                onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))} required autoFocus />
             </div>
             <div className="form-group">
               <label>Amount ($)</label>
@@ -186,7 +185,7 @@ export default function ExpensesPage() {
               <input className="form-input" value={form.description ?? ""}
                 onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))} />
             </div>
-            <div style={{ display: "flex", gap: "0.5rem", marginTop: "0.5rem" }}>
+            <div className="form-actions">
               <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? "Saving…" : "Save"}</button>
               <button type="button" className="btn btn-secondary" onClick={closeForm}>Cancel</button>
             </div>
@@ -194,20 +193,20 @@ export default function ExpensesPage() {
         </div>
       )}
 
-      {/* Table/ */}
+      {/* Table */}
       {loading ? <div className="spinner" /> : expenses.length === 0 ? (
-        <p style={{ color: "var(--color-text-muted)" }}>No expenses found.</p>
+        <p className="no-results">No expenses found.</p>
       ) : (
-        <div className="card" style={{ padding: 0 }}>
+        <div className="card table-card">
           <div className="table-wrapper">
             <table>
               <thead>
                 <tr>
-                  <th style={{ cursor: "pointer" }} onClick={() => handleSort("title")}>Title{sortArrow("title")}</th>
+                  <th className="th-sortable" onClick={() => handleSort("title")}>Title{sortArrow("title")}</th>
                   <th>Category</th>
                   <th>Payment</th>
-                  <th style={{ cursor: "pointer" }} onClick={() => handleSort("date")}>Date{sortArrow("date")}</th>
-                  <th style={{ cursor: "pointer", textAlign: "right" }} onClick={() => handleSort("amount")}>Amount{sortArrow("amount")}</th>
+                  <th className="th-sortable" onClick={() => handleSort("date")}>Date{sortArrow("date")}</th>
+                  <th className="th-amount" onClick={() => handleSort("amount")}>Amount{sortArrow("amount")}</th>
                   <th />
                 </tr>
               </thead>
@@ -216,19 +215,15 @@ export default function ExpensesPage() {
                   <tr key={e.id}>
                     <td>
                       <div>{e.title}</div>
-                      {e.description && <div style={{ fontSize: "0.8rem", color: "var(--color-text-muted)" }}>{e.description}</div>}
+                      {e.description && <div className="td-desc">{e.description}</div>}
                     </td>
-                    <td>
-                      {e.category
-                        ? <span className="badge">{e.category.name}</span>
-                        : "—"}
-                    </td>
-                    <td style={{ fontSize: "0.85rem" }}>{PAYMENT_METHODS.find(p => p.value === e.paymentMethod)?.label ?? e.paymentMethod}</td>
+                    <td>{e.category ? <span className="badge">{e.category.name}</span> : "—"}</td>
+                    <td className="td-payment">{PAYMENT_METHODS.find(p => p.value === e.paymentMethod)?.label ?? e.paymentMethod}</td>
                     <td>{new Date(e.date).toLocaleDateString()}</td>
-                    <td style={{ textAlign: "right", fontWeight: 600 }}>${parseFloat(e.amount).toFixed(2)}</td>
-                    <td style={{ whiteSpace: "nowrap" }}>
-                      <button className="btn btn-secondary" style={{ padding: "0.2rem 0.5rem", fontSize: "0.8rem", marginRight: "0.25rem" }} onClick={() => openEdit(e)}>Edit</button>
-                      <button className="btn btn-danger" style={{ padding: "0.2rem 0.5rem", fontSize: "0.8rem" }} onClick={() => handleDelete(e.id)}>Delete</button>
+                    <td className="td-amount">${parseFloat(e.amount).toFixed(2)}</td>
+                    <td className="td-actions">
+                      <button className="btn btn-secondary btn-table btn-table-edit" onClick={() => openEdit(e)}>Edit</button>
+                      <button className="btn btn-danger btn-table" onClick={() => handleDelete(e.id)}>Delete</button>
                     </td>
                   </tr>
                 ))}
@@ -240,9 +235,9 @@ export default function ExpensesPage() {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="pagination" style={{ marginTop: "1rem" }}>
+        <div className="pagination pagination-bar">
           <button className="btn btn-secondary" disabled={filters.page === 1} onClick={() => dispatch(setPage(filters.page - 1))}>‹ Prev</button>
-          <span style={{ padding: "0 0.75rem", lineHeight: "2rem" }}>Page {filters.page} of {totalPages}</span>
+          <span className="pagination-info">Page {filters.page} of {totalPages}</span>
           <button className="btn btn-secondary" disabled={filters.page === totalPages} onClick={() => dispatch(setPage(filters.page + 1))}>Next ›</button>
         </div>
       )}

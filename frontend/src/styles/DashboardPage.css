@@ -1,0 +1,129 @@
+.dashboard-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.5rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+}
+
+.dashboard-header h2 {
+  color: var(--color-primary);
+  margin: 0;
+}
+
+.dashboard-picker {
+  display: flex;
+  gap: 0.5rem;
+  align-items: center;
+}
+
+.picker-month {
+  width: 130px;
+}
+
+.picker-year {
+  width: 90px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 1rem;
+  margin-bottom: 2rem;
+}
+
+.stat-card {
+  text-align: center;
+}
+
+.stat-label {
+  font-size: 0.82rem;
+  color: var(--color-text-muted);
+  margin-bottom: 0.4rem;
+}
+
+.stat-value {
+  font-size: 1.7rem;
+  font-weight: 700;
+  color: var(--color-primary);
+}
+
+.stat-value.accent {
+  color: var(--color-accent);
+}
+
+.stat-value.danger {
+  color: var(--color-danger);
+}
+
+.stat-value.status {
+  font-size: 1.05rem;
+}
+
+.stat-sub {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+  margin-top: 0.25rem;
+}
+
+.section-card {
+  margin-bottom: 2rem;
+}
+
+.section-card h3 {
+  margin-bottom: 1rem;
+  color: var(--color-primary);
+}
+
+.category-row {
+  margin-bottom: 0.85rem;
+}
+
+.category-row-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+}
+
+.budget-row {
+  margin-bottom: 1rem;
+}
+
+.budget-row-header {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.9rem;
+  margin-bottom: 0.25rem;
+  align-items: center;
+}
+
+.budget-row-right {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.status-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+}
+
+.expense-desc {
+  font-size: 0.78rem;
+  color: var(--color-text-muted);
+}
+
+.amount-cell {
+  text-align: right;
+  font-weight: 600;
+}
+
+.payment-cell {
+  font-size: 0.82rem;
+}
+
+.muted-text {
+  color: var(--color-text-muted);
+}

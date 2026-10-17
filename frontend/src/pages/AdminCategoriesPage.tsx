@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Layout from "../components/Layout";
 import { categoryApi } from "../services/api";
+import "../styles/AdminCategoriesPage.css";
 
 interface Cat { id: string; name: string; }
 
@@ -19,7 +20,7 @@ export default function AdminCategoriesPage() {
 
   useEffect(() => { load(); }, []);
 
-  const openEdit = (c: Cat) => { setEditing(c); setName(c.name); setError(""); };
+  const openEdit  = (c: Cat) => { setEditing(c); setName(c.name); setError(""); };
   const closeForm = () => { setEditing(null); setName(""); setError(""); };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -52,18 +53,15 @@ export default function AdminCategoriesPage() {
 
   return (
     <Layout>
-      <h2 style={{ marginBottom: "1.5rem", color: "var(--color-primary)" }}>Manage Categories</h2>
-      {/*category form*/}
-      
-      <div className="card" style={{ marginBottom: "2rem", maxWidth: 480 }}>
-        <h3 style={{ marginBottom: "1rem", color: "var(--color-primary)" }}>
-          {editing ? `Edit "${editing.name}"` : "New category"}
-        </h3>
-        {error && <div className="alert alert-error" style={{ marginBottom: "1rem" }}>{error}</div>}
-        <form onSubmit={handleSubmit} style={{ display: "flex", gap: "0.5rem", flexWrap: "wrap" }}>
+      <h2 className="categories-header">Manage Categories</h2>
+
+      {/* Form */}
+      <div className="card categories-form-card">
+        <h3>{editing ? `Edit "${editing.name}"` : "New category"}</h3>
+        {error && <div className="alert alert-error">{error}</div>}
+        <form onSubmit={handleSubmit} className="categories-form">
           <input
-            className="form-input"
-            style={{ flex: "1 1 200px" }}
+            className="form-input categories-form-input"
             placeholder="Category name…"
             value={name}
             onChange={(e) => setName(e.target.value)}
@@ -78,39 +76,24 @@ export default function AdminCategoriesPage() {
           )}
         </form>
       </div>
-         {/*category list*/}
-      
+
+      {/* List */}
       {loading ? <div className="spinner" /> : categories.length === 0 ? (
-        <p style={{ color: "var(--color-text-muted)" }}>No categories yet. Add one above.</p>
+        <p className="no-categories">No categories yet. Add one above.</p>
       ) : (
-        <div className="card" style={{ padding: 0 }}>
+        <div className="card categories-table-card">
           <div className="table-wrapper">
             <table>
               <thead>
-                <tr>
-                  <th>Name</th>
-                  <th style={{ width: 120 }} />
-                </tr>
+                <tr><th>Name</th><th /></tr>
               </thead>
               <tbody>
                 {categories.map((c) => (
                   <tr key={c.id}>
-                    <td style={{ fontWeight: 500 }}>{c.name}</td>
-                    <td style={{ whiteSpace: "nowrap" }}>
-                      <button
-                        className="btn btn-secondary"
-                        style={{ padding: "0.2rem 0.55rem", fontSize: "0.8rem", marginRight: "0.4rem" }}
-                        onClick={() => openEdit(c)}
-                      >
-                        Edit
-                      </button>
-                      <button
-                        className="btn btn-danger"
-                        style={{ padding: "0.2rem 0.55rem", fontSize: "0.8rem" }}
-                        onClick={() => handleDelete(c.id)}
-                      >
-                        Delete
-                      </button>
+                    <td className="td-name">{c.name}</td>
+                    <td className="td-cat-actions">
+                      <button className="btn btn-secondary btn-cat-edit" onClick={() => openEdit(c)}>Edit</button>
+                      <button className="btn btn-danger btn-cat-delete" onClick={() => handleDelete(c.id)}>Delete</button>
                     </td>
                   </tr>
                 ))}
