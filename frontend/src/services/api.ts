@@ -111,8 +111,8 @@ export const budgetApi = {
 
 //Admin API
 export const adminApi = {
-  dashboard: () =>
-    api.get<AdminDashboardResponse>('/admin/dashboard').then((r) => r.data),
+  dashboard: (month?: number, year?: number) =>
+    api.get<AdminDashboardResponse>('/admin/dashboard', { params: { month, year } }).then((r) => r.data),
 
   users: () =>
     api.get<AdminUsersResponse>('/admin/users').then((r) => r.data),

@@ -183,7 +183,7 @@ export default function DashboardPage() {
                           <div>{e.title}</div>
                           {e.description && <div className="expense-desc">{e.description}</div>}
                         </td>
-                        <td>{e.category ? <span className="badge">{e.category.name}</span> : "—"}</td>
+                        <td>{e.category ? <span className="badge">{e.category.name}</span> : <span className="badge badge-neutral">Uncategorised</span>}</td>
                         <td className="payment-cell">{e.paymentMethod.replace("_", " ")}</td>
                         <td>{new Date(e.date).toLocaleDateString()}</td>
                         <td className="amount-cell">${parseFloat(e.amount).toFixed(2)}</td>

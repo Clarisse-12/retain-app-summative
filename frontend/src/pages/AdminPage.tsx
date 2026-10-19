@@ -1,35 +1,56 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Layout from "../components/Layout";
 import { adminApi } from "../services/api";
 import type { AdminDashboardResponse, AdminInsightsResponse, AdminUser, RecentUser } from "../types";
 import "../styles/AdminPage.css";
 
+const now = new Date();
+const YEARS = Array.from({ length: 9 }, (_, i) => now.getFullYear() - 3 + i);
+
 export default function AdminPage() {
+  const [month,     setMonth]     = useState(now.getMonth() + 1);
+  const [year,      setYear]      = useState(now.getFullYear());
   const [dashboard, setDashboard] = useState<AdminDashboardResponse | null>(null);
   const [users,     setUsers]     = useState<AdminUser[]>([]);
   const [insights,  setInsights]  = useState<AdminInsightsResponse | null>(null);
   const [loading,   setLoading]   = useState(true);
 
-  useEffect(() => {
-    Promise.all([adminApi.dashboard(), adminApi.users(), adminApi.insights()])
+  const loadDashboard = useCallback(() => {
+    setLoading(true);
+    Promise.all([adminApi.dashboard(month, year), adminApi.users(), adminApi.insights()])
       .then(([d, u, i]) => { setDashboard(d); setUsers(u.users); setInsights(i); })
       .finally(() => setLoading(false));
-  }, []);
+  }, [month, year]);
+
+  useEffect(() => { loadDashboard(); }, [loadDashboard]);
 
   if (loading) return <Layout><div className="spinner" /></Layout>;
 
   const stats = dashboard!.stats;
+  const monthLabel = new Date(year, month - 1).toLocaleString("default", { month: "long" });
 
   return (
     <Layout>
-      <h2 className="admin-header">Admin Dashboard</h2>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: "1.5rem", flexWrap: "wrap", gap: "0.75rem" }}>
+        <h2 className="admin-header" style={{ margin: 0 }}>Admin Dashboard</h2>
+        <div style={{ display: "flex", gap: "0.5rem", alignItems: "center" }}>
+          <select className="form-input" style={{ width: 140 }} value={month} onChange={(e) => setMonth(Number(e.target.value))}>
+            {Array.from({ length: 12 }, (_, i) => (
+              <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString("default", { month: "long" })}</option>
+            ))}
+          </select>
+          <select className="form-input" style={{ width: 100 }} value={year} onChange={(e) => setYear(Number(e.target.value))}>
+            {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
+          </select>
+        </div>
+      </div>
 
       {/* Stats */}
       <div className="admin-stats-grid">
         {[
           { label: "Total users",    value: stats.totalUsers },
           { label: "Total expenses", value: stats.totalExpenses },
-          { label: "This month",     value: stats.expensesThisMonth },
+          { label: `Expenses — ${monthLabel} ${year}`, value: stats.expensesThisMonth },
           { label: "Total value",    value: `$${Number(stats.totalExpenseValue).toFixed(2)}` },
         ].map((s) => (
           <div key={s.label} className="card admin-stat-card">
@@ -175,7 +196,7 @@ export default function AdminPage() {
                 <tr key={e.id}>
                   <td>{e.title}</td>
                   <td className="td-muted">{(e as any).user?.name ?? e.userId}</td>
-                  <td>{e.category ? <span className="badge">{e.category.name}</span> : "—"}</td>
+                  <td>{e.category ? <span className="badge">{e.category.name}</span> : <span className="badge badge-neutral">Uncategorised</span>}</td>
                   <td>{new Date(e.date).toLocaleDateString()}</td>
                   <td className="td-right-bold">${parseFloat(e.amount).toFixed(2)}</td>
                 </tr>

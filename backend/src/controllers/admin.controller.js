@@ -5,8 +5,11 @@ const prisma = require("../config/database");
  */
 const getDashboard = async (req, res) => {
   const now = new Date();
-  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
-  const monthEnd   = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+  const month = req.query.month ? parseInt(req.query.month, 10) : now.getMonth() + 1;
+  const year  = req.query.year  ? parseInt(req.query.year,  10) : now.getFullYear();
+
+  const monthStart = new Date(year, month - 1, 1);
+  const monthEnd   = new Date(year, month,     1);
 
   const [userCount, expenseCount, expenseAggregate, expensesThisMonth, recentExpenses, recentUsers] =
     await prisma.$transaction([
