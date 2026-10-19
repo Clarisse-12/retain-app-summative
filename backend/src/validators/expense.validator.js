@@ -18,6 +18,7 @@ const expenseSchema = z.object({
   date: z
     .string()
     .datetime({ offset: true, message: "Date must be a valid ISO 8601 datetime string" })
+    .refine((d) => new Date(d) <= new Date(), { message: "Expense date cannot be in the future" })
     .optional(),
   categoryId: z
     .string()

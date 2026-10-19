@@ -92,7 +92,6 @@ export interface CreateBudgetInput {
   amount: number;
   month: number;
   year: number;
-  categoryId?: string | null;
 }
 
 export interface UpdateBudgetInput extends Partial<CreateBudgetInput> {}

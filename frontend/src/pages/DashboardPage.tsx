@@ -131,7 +131,7 @@ export default function DashboardPage() {
                       <span>${c.total.toFixed(2)} ({pct.toFixed(0)}%)</span>
                     </div>
                     <div className="progress-bar">
-                      <div className="progress-bar-fill" style={{ width: `${pct}%`, background: "var(--color-accent)" }} />
+                      <div className="progress-fill" style={{ width: `${pct}%` }} />
                     </div>
                   </div>
                 );
@@ -155,7 +155,7 @@ export default function DashboardPage() {
                       </div>
                     </div>
                     <div className="progress-bar">
-                      <div className="progress-bar-fill" style={{ width: `${Math.min(b.percentUsed, 100)}%`, background: s.color }} />
+                      <div className="progress-fill" style={{ width: `${Math.max(Math.min(b.percentUsed, 100), b.percentUsed > 0 ? 2 : 0)}%`, background: s.color }} />
                     </div>
                   </div>
                 );

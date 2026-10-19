@@ -25,6 +25,7 @@ export default function ExpensesPage() {
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading,    setLoading]    = useState(true);
   const [showForm,   setShowForm]   = useState(false);
+  const [viewing,    setViewing]    = useState<Expense | null>(null);
   const [editing,    setEditing]    = useState<Expense | null>(null);
   const [form,       setForm]       = useState<CreateExpenseInput>(EMPTY_FORM);
   const [formError,  setFormError]  = useState("");
@@ -59,6 +60,8 @@ export default function ExpensesPage() {
   };
 
   const closeForm = () => { setShowForm(false); setEditing(null); };
+  const openView  = (e: Expense) => { setViewing(e); setShowForm(false); };
+  const closeView = () => setViewing(null);
 
   const handleSubmit = async (ev: React.FormEvent) => {
     ev.preventDefault();
@@ -144,6 +147,31 @@ export default function ExpensesPage() {
         <button className="btn btn-secondary" onClick={() => dispatch(resetFilters())}>Reset</button>
       </div>
 
+      {/* View modal */}
+      {viewing && (
+        <div className="modal-overlay" onClick={closeView}>
+          <div className="modal" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-header">
+              <span className="modal-title">{viewing.title}</span>
+              <button className="btn btn-secondary btn-sm" onClick={closeView}>✕</button>
+            </div>
+            <table style={{ width: "100%", fontSize: "0.9rem" }}>
+              <tbody>
+                <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Amount</td><td style={{ fontWeight: 600 }}>${parseFloat(viewing.amount).toFixed(2)}</td></tr>
+                <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Date</td><td>{new Date(viewing.date).toLocaleDateString()}</td></tr>
+                <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Category</td><td>{viewing.category?.name ?? "—"}</td></tr>
+                <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Payment</td><td>{PAYMENT_METHODS.find(p => p.value === viewing.paymentMethod)?.label ?? viewing.paymentMethod}</td></tr>
+                {viewing.description && <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Description</td><td>{viewing.description}</td></tr>}
+              </tbody>
+            </table>
+            <div className="modal-footer">
+              <button className="btn btn-secondary" onClick={closeView}>Close</button>
+              <button className="btn btn-primary" onClick={() => { closeView(); openEdit(viewing); }}>Edit</button>
+            </div>
+          </div>
+        </div>
+      )}
+
       {/* Form */}
       {showForm && (
         <div className="card form-card">
@@ -163,6 +191,7 @@ export default function ExpensesPage() {
             <div className="form-group">
               <label>Date</label>
               <input type="date" className="form-input" value={form.date ?? ""}
+                max={new Date().toISOString().slice(0, 10)}
                 onChange={(e) => setForm((f) => ({ ...f, date: e.target.value }))} />
             </div>
             <div className="form-group">
@@ -222,6 +251,7 @@ export default function ExpensesPage() {
                     <td>{new Date(e.date).toLocaleDateString()}</td>
                     <td className="td-amount">${parseFloat(e.amount).toFixed(2)}</td>
                     <td className="td-actions">
+                      <button className="btn btn-secondary btn-table" onClick={() => openView(e)}>View</button>
                       <button className="btn btn-secondary btn-table btn-table-edit" onClick={() => openEdit(e)}>Edit</button>
                       <button className="btn btn-danger btn-table" onClick={() => handleDelete(e.id)}>Delete</button>
                     </td>

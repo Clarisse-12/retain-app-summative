@@ -1,7 +1,7 @@
 import { useEffect, useState, useCallback } from "react";
 import Layout from "../components/Layout";
-import { budgetApi, categoryApi } from "../services/api";
-import type { BudgetSummaryItem, Category, CreateBudgetInput } from "../types";
+import { budgetApi } from "../services/api";
+import type { BudgetSummaryItem, CreateBudgetInput } from "../types";
 import "../styles/BudgetsPage.css";
 
 const now = new Date();
@@ -17,12 +17,10 @@ function getMonthContext(month: number, year: number): MonthContext {
   return "future";
 }
 
-function budgetStatus(pct: number, ctx: MonthContext) {
-  if (ctx === "past"   && pct < 100) return { label: "Over budget",   color: "var(--color-danger)" };
-  if (ctx === "future")              return { label: "Approaching",   color: "#f59e0b" };
-  if (pct >= 100) return { label: "Over budget",   color: "var(--color-danger)" };
-  if (pct >= 80)  return { label: "Approaching",   color: "#f59e0b" };
-  return              { label: "Within budget", color: "var(--color-accent)" };
+function budgetStatus(pct: number) {
+  if (pct >= 100) return { label: "Over budget",  color: "var(--color-danger)" };
+  if (pct >= 80)  return { label: "Approaching",  color: "#f59e0b" };
+  return                 { label: "Within budget", color: "var(--color-accent)" };
 }
 
 export default function BudgetsPage() {
@@ -30,11 +28,10 @@ export default function BudgetsPage() {
   const [year,      setYear]      = useState(now.getFullYear());
   const [summary,   setSummary]   = useState<BudgetSummaryItem[]>([]);
   const [totalSpent,setTotalSpent]= useState(0);
-  const [categories,setCategories]= useState<Category[]>([]);
   const [loading,   setLoading]   = useState(true);
   const [showForm,  setShowForm]  = useState(false);
   const [editing,   setEditing]   = useState<BudgetSummaryItem | null>(null);
-  const [form,      setForm]      = useState<CreateBudgetInput>({ amount: 0, month, year, categoryId: null });
+  const [form,      setForm]      = useState<CreateBudgetInput>({ amount: 0, month, year });
   const [formError, setFormError] = useState("");
   const [saving,    setSaving]    = useState(false);
 
@@ -46,10 +43,9 @@ export default function BudgetsPage() {
   }, [month, year]);
 
   useEffect(() => { load(); }, [load]);
-  useEffect(() => { categoryApi.list().then((r) => setCategories(r.categories)); }, []);
 
-  const openCreate = () => { setEditing(null); setForm({ amount: 0, month, year, categoryId: null }); setFormError(""); setShowForm(true); };
-  const openEdit   = (b: BudgetSummaryItem) => { setEditing(b); setForm({ amount: parseFloat(b.amount), month: b.month, year: b.year, categoryId: b.categoryId }); setFormError(""); setShowForm(true); };
+  const openCreate = () => { setEditing(null); setForm({ amount: 0, month, year }); setFormError(""); setShowForm(true); };
+  const openEdit   = (b: BudgetSummaryItem) => { setEditing(b); setForm({ amount: parseFloat(b.amount), month: b.month, year: b.year }); setFormError(""); setShowForm(true); };
   const closeForm  = () => { setShowForm(false); setEditing(null); };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -120,7 +116,8 @@ export default function BudgetsPage() {
           </div>
         </div>
         {totalBudgeted > 0 && (() => {
-          const s = budgetStatus(totalBudgeted > 0 ? (totalSpent / totalBudgeted) * 100 : 0, ctx);
+          const overallPct = totalBudgeted > 0 ? (totalSpent / totalBudgeted) * 100 : 0;
+          const s = budgetStatus(overallPct);
           return (
             <div className="card budget-stat-card">
               <div className="budget-stat-label">Overall status</div>
@@ -147,7 +144,7 @@ export default function BudgetsPage() {
                 <label>Month</label>
                 <select className="form-input" value={form.month} onChange={(e) => setForm((f) => ({ ...f, month: Number(e.target.value) }))}>
                   {Array.from({ length: 12 }, (_, i) => (
-                    <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString("default", { month: "short" })}</option>
+                    <option key={i + 1} value={i + 1}>{new Date(2000, i).toLocaleString("default", { month: "long" })}</option>
                   ))}
                 </select>
               </div>
@@ -157,14 +154,6 @@ export default function BudgetsPage() {
                   {YEARS.map((y) => <option key={y} value={y}>{y}</option>)}
                 </select>
               </div>
-            </div>
-            <div className="form-group">
-              <label>Category</label>
-              <select className="form-input" value={form.categoryId ?? ""}
-                onChange={(e) => setForm((f) => ({ ...f, categoryId: e.target.value || null }))}>
-                <option value="">Overall (no category)</option>
-                {categories.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
-              </select>
             </div>
             <div className="budget-form-actions">
               <button type="submit" className="btn btn-primary" disabled={saving}>{saving ? "Saving…" : "Save"}</button>
@@ -180,7 +169,7 @@ export default function BudgetsPage() {
       ) : (
         <div className="budget-list">
           {summary.map((b) => {
-            const s = budgetStatus(b.percentUsed, ctx);
+            const s = budgetStatus(b.percentUsed);
             return (
               <div key={b.id} className="card">
                 <div className="budget-item-header">
@@ -195,7 +184,7 @@ export default function BudgetsPage() {
                   </div>
                 </div>
                 <div className="progress-bar">
-                  <div className="progress-bar-fill" style={{ width: `${Math.min(b.percentUsed, 100)}%`, background: s.color }} />
+                  <div className="progress-fill" style={{ width: `${Math.max(Math.min(b.percentUsed, 100), b.percentUsed > 0 ? 2 : 0)}%`, background: s.color }} />
                 </div>
                 <div className="budget-item-footer">
                   <span>{b.percentUsed.toFixed(0)}% used</span>

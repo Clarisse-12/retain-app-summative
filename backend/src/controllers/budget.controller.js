@@ -29,38 +29,19 @@ const getBudgets = async (req, res) => {
  * Prevents duplicate budgets for the same user, month, year, and category.
  */
 const createBudget = async (req, res) => {
-  const { amount, month, year, categoryId } = req.body;
+  const { amount, month, year } = req.body;
   const userId = req.user.id;
 
-  if (categoryId) {
-    const category = await prisma.category.findUnique({ where: { id: categoryId } });
-    if (!category) {
-      return res.status(404).json({ message: "Category not found" });
-    }
-  }
-
   const duplicate = await prisma.budget.findFirst({
-    where: {
-      userId,
-      month: parseInt(month, 10),
-      year: parseInt(year, 10),
-      categoryId: categoryId ? categoryId : null,
-    },
+    where: { userId, month: parseInt(month, 10), year: parseInt(year, 10), categoryId: null },
   });
 
   if (duplicate) {
-    const label = categoryId ? "category budget" : "overall budget";
-    return res.status(409).json({ message: `A ${label} for that month already exists` });
+    return res.status(409).json({ message: "A budget for that month already exists" });
   }
 
   const budget = await prisma.budget.create({
-    data: {
-      amount,
-      month: parseInt(month, 10),
-      year: parseInt(year, 10),
-      userId,
-      categoryId: categoryId ?? null,
-    },
+    data: { amount, month: parseInt(month, 10), year: parseInt(year, 10), userId, categoryId: null },
     include: { category: { select: { id: true, name: true } } },
   });
 
@@ -74,19 +55,12 @@ const createBudget = async (req, res) => {
 const updateBudget = async (req, res) => {
   const { id } = req.params;
   const userId = req.user.id;
-  const { amount, month, year, categoryId } = req.body;
+  const { amount, month, year } = req.body;
 
   const budget = await prisma.budget.findUnique({ where: { id } });
 
   if (!budget || budget.userId !== userId) {
     return res.status(404).json({ message: "Budget not found" });
-  }
-
-  if (categoryId) {
-    const category = await prisma.category.findUnique({ where: { id: categoryId } });
-    if (!category) {
-      return res.status(404).json({ message: "Category not found" });
-    }
   }
 
   const updated = await prisma.budget.update({
@@ -95,7 +69,6 @@ const updateBudget = async (req, res) => {
       ...(amount !== undefined && { amount }),
       ...(month !== undefined && { month }),
       ...(year !== undefined && { year }),
-      ...("categoryId" in req.body && { categoryId: categoryId ?? null }),
     },
     include: { category: { select: { id: true, name: true } } },
   });
@@ -161,19 +134,15 @@ const getBudgetSummary = async (req, res) => {
   ]);
 
   // Calculate total spending per category and overall
-  const spendingByCategory = {};
   let totalSpent = 0;
 
   for (const expense of expenses) {
-    const amount = parseFloat(expense.amount);
-    totalSpent += amount;
-    const key = expense.categoryId ?? "overall";
-    spendingByCategory[key] = (spendingByCategory[key] || 0) + amount;
+    totalSpent += parseFloat(expense.amount);
   }
 
   const summary = budgets.map((budget) => {
-    const key = budget.categoryId ?? "overall";
-    const spent = spendingByCategory[key] || 0;
+    // overall budget (no category) tracks ALL spending for the month
+    const spent = totalSpent;
     const budgetAmount = parseFloat(budget.amount);
 
     return {
