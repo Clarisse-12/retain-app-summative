@@ -52,8 +52,8 @@ app.use(errorMiddleware);
 
 // ── Start server ──────────────────────────────────────────────────────────────
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on http://localhost:${PORT}`);
+const server = app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Retain API is running on port ${PORT}`);
 });
 
 // ── Graceful shutdown ─────────────────────────────────────────────────────────
