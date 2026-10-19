@@ -1,4 +1,5 @@
 import { NavLink, useNavigate } from "react-router-dom";
+import { useState } from "react";
 import type { ReactNode } from "react";
 import { useAuth } from "../context/AuthContext";
 import "../styles/Layout.css";
@@ -6,11 +7,10 @@ import "../styles/Layout.css";
 export default function Layout({ children }: { children: ReactNode }) {
   const { user, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    navigate("/login");
-  };
+  const handleLogout = () => { logout(); navigate("/login"); };
+  const close = () => setOpen(false);
 
   const navLinks = isAdmin
     ? [
@@ -25,7 +25,16 @@ export default function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div className="layout">
-      <nav className="sidebar">
+      {/* Mobile top bar */}
+      <div className="mobile-topbar">
+        <span className="mobile-logo">Retain</span>
+        <button className="hamburger" onClick={() => setOpen((o) => !o)}>☰</button>
+      </div>
+
+      {/* Overlay */}
+      <div className={`sidebar-overlay${open ? " open" : ""}`} onClick={close} />
+
+      <nav className={`sidebar${open ? " open" : ""}`}>
         <div className="sidebar-logo">Retain</div>
 
         {navLinks.map(({ to, label }) => (
@@ -33,6 +42,7 @@ export default function Layout({ children }: { children: ReactNode }) {
             key={to}
             to={to}
             className={({ isActive }) => `nav-link${isActive ? " active" : ""}`}
+            onClick={close}
           >
             {label}
           </NavLink>

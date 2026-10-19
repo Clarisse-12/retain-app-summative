@@ -2,8 +2,8 @@
 :root {
   --color-primary:       #17324D;
   --color-primary-dark:  #102438;
-  --color-accent:        #159A72;
-  --color-accent-light:  #EAF7F1;
+  --color-accent:        #2E6DA4;
+  --color-accent-light:  #E8F1FA;
   --color-bg:            #F7F9FC;
   --color-surface:       #FFFFFF;
   --color-text:          #1D2939;
@@ -178,3 +178,34 @@ tbody tr:hover { background: var(--color-bg); }
 .pagination button:hover:not(:disabled) { background: var(--color-bg); }
 .pagination button.active { background: var(--color-accent); color: #fff; border-color: var(--color-accent); }
 .pagination button:disabled { opacity: .4; cursor: not-allowed; }
+
+/* ── Responsive ────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  table { min-width: 520px; }
+
+  .stats-grid,
+  .admin-stats-grid,
+  .budget-stats-grid { grid-template-columns: repeat(2, 1fr) !important; }
+
+  .admin-two-col { grid-template-columns: 1fr !important; }
+
+  .filters-card { flex-wrap: wrap; }
+
+  .dashboard-picker,
+  .month-picker { flex-wrap: wrap; }
+
+  .budget-form-card { max-width: 100% !important; }
+
+  .page-header { flex-direction: column; align-items: flex-start; }
+
+  .modal { padding: 16px; }
+}
+
+@media (max-width: 480px) {
+  .stats-grid,
+  .admin-stats-grid,
+  .budget-stats-grid { grid-template-columns: 1fr !important; }
+
+  .card { padding: 14px; }
+}

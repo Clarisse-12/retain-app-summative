@@ -10,7 +10,7 @@ export default function LandingPage() {
         <span className="landing-logo">Retain</span>
         <div className="landing-header-actions">
           <button className="btn btn-ghost" onClick={() => navigate("/login")}>Sign in</button>
-          <button className="btn btn-primary" onClick={() => navigate("/register")}>Get started</button>
+          <button className="btn btn-header-register" onClick={() => navigate("/register")}>Get started</button>
         </div>
       </header>
 
