@@ -29,7 +29,11 @@ export default function LoginPage() {
   return (
     <div className="auth-page">
       <div className="card auth-card">
-        <h1>Sign in to Retain</h1>
+        <div className="auth-brand">
+          <div className="auth-brand-logo">Retain</div>
+          <h1>Welcome to your Retain app</h1>
+          <p className="auth-tagline">Track expenses.<br />Stay on budget.</p>
+        </div>
         {error && <div className="alert alert-error">{error}</div>}
         <form onSubmit={handleSubmit}>
           <div className="form-group">

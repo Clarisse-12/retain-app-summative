@@ -8,7 +8,6 @@ import ExpensesPage from "./pages/ExpensesPage";
 import BudgetsPage from "./pages/BudgetsPage";
 import AdminPage from "./pages/AdminPage";
 import AdminCategoriesPage from "./pages/AdminCategoriesPage";
-import LandingPage from "./pages/LandingPage";
 
 function RequireAuth() {
   const { user, loading } = useAuth();
@@ -39,7 +38,7 @@ export default function App() {
   return (
     <BrowserRouter>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<Navigate to="/login" replace />} />
         <Route element={<GuestOnly />}>
           <Route path="/login"    element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
