@@ -159,7 +159,7 @@ export default function ExpensesPage() {
               <tbody>
                 <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Amount</td><td style={{ fontWeight: 600 }}>${parseFloat(viewing.amount).toFixed(2)}</td></tr>
                 <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Date</td><td>{new Date(viewing.date).toLocaleDateString()}</td></tr>
-                <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Category</td><td>{viewing.category?.name ?? "—"}</td></tr>
+                <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Category</td><td>{viewing.category?.name ?? "Uncategorised"}</td></tr>
                 <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Payment</td><td>{PAYMENT_METHODS.find(p => p.value === viewing.paymentMethod)?.label ?? viewing.paymentMethod}</td></tr>
                 {viewing.description && <tr><td style={{ color: "var(--color-text-muted)", paddingBottom: 8 }}>Description</td><td>{viewing.description}</td></tr>}
               </tbody>
@@ -246,7 +246,7 @@ export default function ExpensesPage() {
                       <div>{e.title}</div>
                       {e.description && <div className="td-desc">{e.description}</div>}
                     </td>
-                    <td>{e.category ? <span className="badge">{e.category.name}</span> : "—"}</td>
+                    <td>{e.category ? <span className="badge">{e.category.name}</span> : <span className="badge badge-neutral">Uncategorised</span>}</td>
                     <td className="td-payment">{PAYMENT_METHODS.find(p => p.value === e.paymentMethod)?.label ?? e.paymentMethod}</td>
                     <td>{new Date(e.date).toLocaleDateString()}</td>
                     <td className="td-amount">${parseFloat(e.amount).toFixed(2)}</td>
